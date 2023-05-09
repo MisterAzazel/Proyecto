@@ -43,7 +43,9 @@ export class AddProductosPage implements OnInit {
     this._productsService.addProduct({  
       id: new Date().getTime().toString(),
       ...this.formProduct.getRawValue(),
-    } as Product);
+    } as Product).then(() => {
+      this._router.navigate(['crud-productos']);
+    });;
   }
 
   getCurrentUser(){
