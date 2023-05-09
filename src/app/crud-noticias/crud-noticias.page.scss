@@ -1,0 +1,48 @@
+.header{
+    background-color: black;
+    outline: white;
+  }
+  
+  @media(min-width: 1024px){
+    .menu-button{
+      display: none;
+    }
+  
+    .menu-main-content{
+      display: none;
+    }
+  
+   
+    
+  }
+  
+  @media(max-width:1023px){
+    .header{
+      display: none;
+    }
+  
+  }
+  
+
+
+.add-news{
+    text-align: center;
+  }
+
+  .img-product{
+    width: 200px;
+    height: 200px;
+    margin: auto;
+  }
+
+  .title{
+    text-align: center;
+    font-size: 30px;
+  }
+
+  .desc{
+    margin: 10px 20px 0px 0px;
+    text-align: center;
+    font-size: 20px;
+    color: #ffffff;
+  }

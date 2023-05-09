@@ -1,4 +1,3 @@
-
 <ion-content>
   <ion-menu contentId="main-content" class="menu-main-content">
     <ion-header>
@@ -9,9 +8,13 @@
         <ion-item href="/"><ion-icon name="chatbubble-outline"></ion-icon> Inicio</ion-item>
         <ion-item href="/contacto"><ion-icon name="chatbox-ellipses-outline"></ion-icon> Contacto</ion-item>
         <ion-item href="/nosotros"><ion-icon name="construct-outline"></ion-icon> Nosotros</ion-item>
+        <ion-item href="/noticias"><ion-icon name="construct-outline"></ion-icon> Noticias</ion-item>
         <ion-item href="/panaderia"><ion-icon name="business-outline"></ion-icon> Panaderia</ion-item>
-        <ion-item href="/login"><ion-icon name="person-sharp"></ion-icon>Login</ion-item>
-        <ion-item href="/carrito"><ion-icon name="cart"></ion-icon>Carrito</ion-item>
+        <ion-item href="/pasteleria"><ion-icon name="business-outline"></ion-icon> Pasteleria</ion-item>
+        <ion-item href="/login" *ngIf="isLoggedIn == false"><ion-icon name="person-sharp"></ion-icon>Iniciar Sesión</ion-item>
+        <ion-item href="/" *ngIf="isLoggedIn == true" (click)="logOut()"><ion-icon name="person-sharp"></ion-icon>Cerrar Sesión</ion-item>
+        <ion-item href="/carrito" ><ion-icon name="cart"></ion-icon>Carrito</ion-item>
+        <ion-item href="/administracion" *ngIf="isAdmin == true || isFinalUser == true"><ion-icon name="person-sharp"></ion-icon>Administración</ion-item>
       </ion-list>
     </ion-header>
     <ion-content class="ion-padding">This is the menu content.</ion-content>
@@ -26,7 +29,7 @@
             <ion-col size="1">
               <img src="https://cdn.moriyashrine.org/monthly_2019_12/magnificent.thumb.jpeg.ca7c07940a465c57296f6aa13fbfb9cc.jpeg" width="50px">
             </ion-col>
-            <ion-col size="5.4" class="ion-text-left">
+            <ion-col size="10" class="ion-text-left">
               <ion-button fill="clear"  href="/">
               Inicio
               </ion-button>
@@ -36,8 +39,23 @@
               <ion-button fill="clear"  href="/nosotros">
               Nosotros
               </ion-button>
+              <ion-button fill="clear"  href="/noticias">
+              Noticias
+              </ion-button>
               <ion-button fill="clear" href="/panaderia">
               Panaderia
+              </ion-button>
+              <ion-button fill="clear" href="/pasteleria">
+              Pasteleria
+              </ion-button>
+              <ion-button fill="clear" *ngIf="isLoggedIn == false" href="/login">
+              Iniciar sesión
+              </ion-button>
+              <ion-button fill="clear" *ngIf="isLoggedIn == true" (click)="logOut()" href="/">
+              Cerrar sesión
+              </ion-button>
+              <ion-button fill="clear" *ngIf="isAdmin == true || isFinalUser == true"  href="/administracion">
+              Administracion
               </ion-button>
             </ion-col>
             <ion-col size="1" class="cart">
@@ -49,6 +67,11 @@
       </ion-toolbar>
     </ion-header>
   </div>
+
+
+  <br>
+  <br>
+  <br>
 
   <div class="register-section ion-padding">
     <div class="heading ion-padding">

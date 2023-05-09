@@ -21,6 +21,7 @@ export class UsersService {
       return addDoc(userRef, user);
     }
 
+    
     register({email, password}: any){
       return createUserWithEmailAndPassword(this.auth, email, password)
     }
@@ -42,6 +43,5 @@ export class UsersService {
       return signOut(this.auth);
     }
 
-    
    
 }

@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { User } from '../commons/interfaces/user.interface';
 import { error } from 'console';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 @Component({
   selector: 'app-register',
@@ -20,6 +21,9 @@ export class RegisterPage  {
 
   _userService = inject(UsersService);
   _router = inject(Router);
+  isAdmin = false;
+  isLoggedIn = false;
+  isFinalUser = false;
 
   form = new FormGroup({
       name: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+'), Validators.minLength(2)]),
@@ -42,7 +46,49 @@ export class RegisterPage  {
     this._userService.addUser({
       id: userId,
       ...this.form.getRawValue(),
+      role: {
+        cliente: true
+      }
     } as User);
     this._router.navigate(['login']);
   }
+
+  getCurrentUser(){
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is signed in, see docs for a list of available properties
+    // https://firebase.google.com/docs/reference/js/firebase.User
+    const uid = user.uid;
+    this.isLoggedIn = true;
+    if (user.email == 'admin@gmail.com') {
+      this.isAdmin = true;
+    }
+
+    else if (user.email == 'finaluser@gmail.com'){
+      this.isFinalUser = true;
+    }
+
+    else{
+      this.isAdmin = false;
+      this.isFinalUser = false;
+    }
+    
+    // ...
+  } else {
+    this.isLoggedIn = false;
+    // User is signed out
+    // ...
+  }
+});
+  }
+
+  logOut(){
+    this._userService.logOut()
+    .then(() => {
+      this._router.navigate(['reload']);
+    })
+    .catch(error => console.log(error));
+  }
+
 }

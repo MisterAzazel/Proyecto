@@ -5,6 +5,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { IonicModule } from '@ionic/angular';
 import { UsersService } from '../services/users.service';
 import { error } from 'console';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 
 @Component({
@@ -17,9 +18,13 @@ import { error } from 'console';
 export class LoginPage implements OnInit {
 
   formLogin : FormGroup;
-  private _router = inject(Router);
+  _router= inject(Router);
+  _userService = inject(UsersService);
+  isAdmin = false;
+  isLoggedIn = false;
+  isFinalUser = false;
 
-  constructor( private userService: UsersService) {
+  constructor() {
     this.formLogin = new FormGroup({
       email: new FormControl('', [Validators.required,Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'), Validators.minLength(10)]),
       password: new FormControl('', [Validators.required, Validators.minLength(8)]),
@@ -27,22 +32,55 @@ export class LoginPage implements OnInit {
    }
 
   ngOnInit() {
+    this.getCurrentUser();
   }
 
   login(){
-    this.userService.login(this.formLogin.value)
+    this._userService.login(this.formLogin.value)
     .then(response =>{
-
+      this._router.navigate(['/home']);
       console.log(response);
     })
     .catch(error => console.log(error));
   }
 
+  getCurrentUser(){
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is signed in, see docs for a list of available properties
+    // https://firebase.google.com/docs/reference/js/firebase.User
+    const uid = user.uid;
+    this.isLoggedIn = true;
+    if (user.email == 'admin@gmail.com') {
+      this.isAdmin = true;
+    }
+
+    else if (user.email == 'finaluser@gmail.com'){
+      this.isFinalUser = true;
+    }
+
+    else{
+      this.isAdmin = false;
+      this.isFinalUser = false;
+    }
+    
+    // ...
+  } else {
+    this.isLoggedIn = false;
+    // User is signed out
+    // ...
+  }
+});
+  }
+
   logOut(){
-    this.userService.logOut()
+    this._userService.logOut()
     .then(() => {
-      this._router.navigate(['/home']);
+      this._router.navigate(['reload']);
     })
     .catch(error => console.log(error));
   }
+
 }
+
