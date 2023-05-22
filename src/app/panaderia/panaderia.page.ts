@@ -32,28 +32,29 @@ export class PanaderiaPage implements OnInit {
   isAdmin = false;
   isLoggedIn = false;
   isFinalUser = false;
-
+  compra: any = [];
+  filtro: string = 'panaderia';
 
   constructor() { 
-    this.loadProducto();
+    this.loadProducto(this.filtro);
+    this.getCurrentUser();
   }
 
   ngOnInit(): void {
     this.getCurrentUser();
+    console.log(sessionStorage.getItem("Producto"));
     //this.product$ = this._productService.getProduct();
   }
 
-  loadProducto(){
-    this._productService.getProduct('panaderia').subscribe( res =>{
+  loadProducto(filtro: string = 'panaderia'){
+    this._productService.getProduct(filtro).subscribe( res =>{
       this.products = res;
     }
 
     )
   }
 
-  addCart(product: Product){
-    this._cartService.addProduct(product)
-  }
+ 
 
   getCurrentUser(){
     const auth = getAuth();
@@ -91,6 +92,10 @@ export class PanaderiaPage implements OnInit {
       this._router.navigate(['reload']);
     })
     .catch(error => console.log(error));
+  }
+
+  onClick(product: Product, compra: number){
+    this._cartService.Add(product, compra);
   }
 
 }

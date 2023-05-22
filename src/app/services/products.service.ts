@@ -33,7 +33,7 @@ export class ProductsService {
 
     querySnapshot.forEach(async (document) => {
       const docRef = doc(this.firestore, 'products', document.id);
-      await updateDoc(docRef, { ...product });
+      await updateDoc(docRef, { ...product});
     });
   }
   

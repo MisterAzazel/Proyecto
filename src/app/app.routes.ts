@@ -70,4 +70,8 @@ export const routes: Routes = [
     path: 'add-noticias',
     loadComponent: () => import('./add-noticias/add-noticias.page').then( m => m.AddNoticiasPage)
   },
+  {
+    path: 'blog',
+    loadComponent: () => import('./blog/blog.page').then( m => m.BlogPage)
+  },
 ];

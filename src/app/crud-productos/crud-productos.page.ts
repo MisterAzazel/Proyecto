@@ -61,8 +61,8 @@ export class CrudProductosPage implements OnInit {
   }
 
   deleteProduct(product: Product) {
-    if (confirm(`Seguro de borrar a ${product.name}`)) {
-      this._productsService.deleteProduct(product.name);
+    if (confirm(`Seguro de borrar a ${product.id}`)) {
+      this._productsService.deleteProduct(product.id);
     }
   }
 

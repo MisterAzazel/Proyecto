@@ -1,46 +1,36 @@
+import { NgxTwitterTimelineModule } from 'ngx-twitter-timeline';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { UsersService } from '../services/users.service';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { Router } from '@angular/router';
-import { CartService } from '../services/cart.service';
-import { Product } from '../commons/interfaces/user.interface';
+import { UsersService } from '../services/users.service';
+
 
 @Component({
-  selector: 'app-carrito',
-  templateUrl: './carrito.page.html',
-  styleUrls: ['./carrito.page.scss'],
+  selector: 'app-blog',
+  templateUrl: './blog.page.html',
+  styleUrls: ['./blog.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, NgxTwitterTimelineModule]
 })
-export class CarritoPage implements OnInit {
+export class BlogPage implements OnInit {
 
   _userService = inject(UsersService);
   isAdmin = false;
   isLoggedIn = false;
   isFinalUser = false;
   _router = inject(Router);
-  cartProducts: any[] = [];
-  _cartService= inject(CartService);
-
 
   constructor() { }
 
   ngOnInit() {
     this.getCurrentUser();
-    this.GetAll();
-    console.log(sessionStorage.getItem("Producto"));
   }
 
-  GetAll() {
-    let value = sessionStorage.getItem("Producto");
-    if (value != '' && value != null && typeof value != "undefined") {
-      this.cartProducts = JSON.parse(value!);
-    }
-  }
 
+  
 
   getCurrentUser(){
     const auth = getAuth();
@@ -80,9 +70,5 @@ export class CarritoPage implements OnInit {
     .catch(error => console.log(error));
   }
 
- 
-
 }
-
-
 

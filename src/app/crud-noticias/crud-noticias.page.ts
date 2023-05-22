@@ -58,8 +58,8 @@ export class CrudNoticiasPage implements OnInit {
   }
 
   deleteNews(news: News) {
-    if (confirm(`Seguro de borrar a ${news.title}`)) {
-      this._newsService.deleteNews(news.title);
+    if (confirm(`Seguro de borrar a ${news.id}`)) {
+      this._newsService.deleteNews(news.id);
     }
   }
 

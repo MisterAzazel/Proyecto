@@ -24,17 +24,19 @@ export class PasteleriaPage implements OnInit {
   products: Product[] = [];
  
 
-  _router= inject(Router);
+  _router = inject(Router);
   _userService = inject(UsersService);
   isAdmin = false;
   isLoggedIn = false;
   isFinalUser = false;
   _productService = inject(ProductsService);
   _cartService = inject(CartService)
+  compra: any = [];
 
   constructor() { 
     this.loadProducto();
     this.getCurrentUser();
+    console.log(sessionStorage.getItem("Producto"));
   }
 
   ngOnInit(): void {
@@ -49,9 +51,7 @@ export class PasteleriaPage implements OnInit {
     )
   }
 
-  addCart(product: Product){
-    this._cartService.addProduct(product)
-  }
+  
 
 getCurrentUser(){
   const auth = getAuth();
@@ -90,5 +90,10 @@ logOut(){
   })
   .catch(error => console.log(error));
   }
+
+  onClick(product: Product, compra: number){
+    this._cartService.Add(product, compra);
+  }
+
 }
 
