@@ -17,19 +17,26 @@ export class CartService {
   }
 
   Add(product: Product, compra: number) {
-    let obj = {
-      nombre_producto: product.name,
-      id: product.id,
-      category: product.category,
-      description: product.description,
-      price: product.price,
-      compra: compra,
-      stock: product.stock,
-      img: product.img,
-    };
-    this.cartProducts.push(obj);
-    this.Save(product.name);
-    console.log(sessionStorage.getItem(product.name));
+    if (product.stock < compra || compra <= 0) {
+      alert('No puedes comprar más productos de los que hay, o comprar menos de 1');
+    }
+
+    else{
+      let obj = {
+        nombre_producto: product.name,
+        id: product.id,
+        category: product.category,
+        description: product.description,
+        price: product.price,
+        compra: compra,
+        stock: product.stock,
+        img: product.img,
+      };
+      this.cartProducts.push(obj);
+      this.Save(product.name);
+      console.log(sessionStorage.getItem(product.name));
+    }
+    
   }
 
   Delete(Nombre: string){

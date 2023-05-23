@@ -11,6 +11,7 @@
         <ion-item href="/noticias"><ion-icon name="construct-outline"></ion-icon> Noticias</ion-item>
         <ion-item href="/panaderia"><ion-icon name="business-outline"></ion-icon> Panaderia</ion-item>
         <ion-item href="/pasteleria"><ion-icon name="business-outline"></ion-icon> Pasteleria</ion-item>
+        <ion-item href="/blog"><ion-icon name="business-outline"></ion-icon> Blog</ion-item>
         <ion-item href="/login" *ngIf="isLoggedIn == false"><ion-icon name="person-sharp"></ion-icon>Iniciar Sesión</ion-item>
         <ion-item href="/" *ngIf="isLoggedIn == true" (click)="logOut()"><ion-icon name="person-sharp"></ion-icon>Cerrar Sesión</ion-item>
         <ion-item href="/carrito" ><ion-icon name="cart"></ion-icon>Carrito</ion-item>
@@ -48,6 +49,9 @@
               <ion-button fill="clear" href="/pasteleria">
               Pasteleria
               </ion-button>
+              <ion-button fill="clear" href="/blog">
+              Blog
+              </ion-button>
               <ion-button fill="clear" *ngIf="isLoggedIn == false" href="/login">
               Iniciar sesión
               </ion-button>
@@ -67,6 +71,7 @@
       </ion-toolbar>
     </ion-header>
   </div>
+
 
 
   <br>
