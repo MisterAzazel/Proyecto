@@ -75,16 +75,16 @@
 
   <div class="products">
     <ion-row>
-      <ion-col sizeLg="4" sizeXs="12"*ngFor=" let product of cartProducts; let i = index" >
-      <ion-card >
-        <ion-img class="img-product" [src]="product.img"></ion-img>
+      <ion-col sizeLg="4" sizeXs="12"*ngFor=" let arr of objetos; let i = index" >
+        <ion-card *ngFor="let objeto of arr">
+        <ion-img class="img-product" [src]="objeto.img"></ion-img>
         <ion-item>
-          <ion-label class="name">{{product.name}}</ion-label>
+          <ion-label class="name">{{objeto.name}}</ion-label>
         </ion-item>
-        <p class="desc">{{product.description}}</p>
-        <p class="price">${{product.price * product.compra[1 + i]}}</p>
-        <p class="compra">{{product.compra[1 + i]}}</p>
-        <ion-button >Borrar del carrito</ion-button>
+        <p class="desc">{{objeto.name}}</p>
+        <p class="price">${{objeto.price}}</p>
+        <p class="compra">{{objeto}}</p>
+        <button ion-button color="danger" >Eliminar</button>
       </ion-card>
       </ion-col>
     </ion-row>

@@ -90,7 +90,7 @@
         <p class="price">${{product.price}}</p>
         <p class="stock">Stock: {{product.stock}}</p>
         <ion-icon class="icon-product" name="cart-sharp"></ion-icon>
-        <ion-input aria-label="compra" class="form-control" type="number" [(ngModel)]="compra[i]"></ion-input>
+        <ion-input aria-label="compra" class="form-control" type="number"  placeholder="Ingrese la cantidad de productos que comprara" [(ngModel)]="compra[i]"></ion-input>
         <ion-button (click)="onClick(product, compra)">Agregar</ion-button>
       </ion-card>
       </ion-col>

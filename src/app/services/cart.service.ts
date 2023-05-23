@@ -28,28 +28,17 @@ export class CartService {
       img: product.img,
     };
     this.cartProducts.push(obj);
-    this.Save();
-    console.log(sessionStorage.getItem("Producto"));
+    this.Save(product.name);
+    console.log(sessionStorage.getItem(product.name));
   }
 
-  
-
-  Delete(index: number) {
-    if (this.cartProducts.length > index) {
-      this.cartProducts.splice(index, 1);
-      this.Save();
-    }
-  }
-
-  DeleteAll() {
-    this.cartProducts = [];
-    this.Save();
-  }
-
-  Save() {
-    sessionStorage.setItem("Producto", JSON.stringify(this.cartProducts));
+  Delete(Nombre: string){
+    sessionStorage.removeItem(Nombre);
   }
 
 
+  Save(Nombre: string) {
+    sessionStorage.setItem(Nombre, JSON.stringify(this.cartProducts));
+  }
   
 }

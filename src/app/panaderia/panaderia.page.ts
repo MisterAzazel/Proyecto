@@ -42,7 +42,7 @@ export class PanaderiaPage implements OnInit {
 
   ngOnInit(): void {
     this.getCurrentUser();
-    console.log(sessionStorage.getItem("Producto"));
+    console.log(sessionStorage);
     //this.product$ = this._productService.getProduct();
   }
 

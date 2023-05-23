@@ -24,21 +24,32 @@ export class CarritoPage implements OnInit {
   _router = inject(Router);
   cartProducts: any[] = [];
   _cartService= inject(CartService);
-
+  objetos: any[] = [];
 
   constructor() { }
 
   ngOnInit() {
     this.getCurrentUser();
     this.GetAll();
-    console.log(sessionStorage.getItem("Producto"));
   }
 
   GetAll() {
-    let value = sessionStorage.getItem("Producto");
-    if (value != '' && value != null && typeof value != "undefined") {
-      this.cartProducts = JSON.parse(value!);
-    }
+    // Obtener todas las claves del sessionStorage
+  const keys = Object.keys(sessionStorage);
+
+  // Array para almacenar los objetos recuperados
+   this.objetos = [];
+
+  // Iterar sobre las claves y obtener los objetos correspondientes
+  for (const key of keys) {
+    const value = sessionStorage.getItem(key);
+  
+  if (value !== null) {
+    const objeto = JSON.parse(value);
+    this.objetos.push(objeto);
+    console.log(this.objetos);
+  }
+}
   }
 
 
