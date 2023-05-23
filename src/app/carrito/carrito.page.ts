@@ -31,6 +31,7 @@ export class CarritoPage implements OnInit {
   ngOnInit() {
     this.getCurrentUser();
     this.GetAll();
+    console.log(this.objetos.keys())
   }
 
   GetAll() {
@@ -48,9 +49,11 @@ export class CarritoPage implements OnInit {
     const objeto = JSON.parse(value);
     this.objetos.push(objeto);
     console.log(this.objetos);
+    }
   }
 }
-  }
+
+
 
 
   getCurrentUser(){
@@ -91,6 +94,9 @@ export class CarritoPage implements OnInit {
     .catch(error => console.log(error));
   }
 
+  borrar(nombre: string){
+    this._cartService.Delete(nombre);
+  }
  
 
 }

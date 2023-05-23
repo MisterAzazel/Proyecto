@@ -79,12 +79,12 @@
         <ion-card *ngFor="let objeto of arr">
         <ion-img class="img-product" [src]="objeto.img"></ion-img>
         <ion-item>
-          <ion-label class="name">{{objeto.name}}</ion-label>
+          <ion-label class="name">{{objeto.nombre_producto}}</ion-label>
         </ion-item>
-        <p class="desc">{{objeto.name}}</p>
+        <p class="desc">{{objeto.description}}</p>
         <p class="price">${{objeto.price}}</p>
-        <p class="compra">{{objeto}}</p>
-        <button ion-button color="danger" >Eliminar</button>
+        <p class="compra">{{objeto.compra[i]}}</p>
+        <ion-button color="danger" (click)="borrar(objeto.nombre_producto)">Eliminar producto</ion-button>
       </ion-card>
       </ion-col>
     </ion-row>
