@@ -96,6 +96,7 @@ export class CarritoPage implements OnInit {
 
   borrar(nombre: string){
     this._cartService.Delete(nombre);
+    this.GetAll();
   }
  
 
