@@ -23,31 +23,19 @@
   
   }
   
-  .img-product{
-    width: 200px;
-    height: 200px;
-    margin: auto;
+  .carta {
+    width: 100%; /* Establece la altura al 100% del viewport */
   }
   
-  .name{
-    text-align: center;
-    font-size: 30px;
+  ion-row,
+  ion-col,
+  ion-card,
+  ion-grid {
+    height: 100%; /* Hace que los elementos ocupen el 100% del contenedor */
   }
   
-  .price{
-    margin: 0px, 20px, 10px, 0px;
-    text-align: center;
-    font-size: 20px;
-    color: #0062cc;
-    font-weight: bold;
-    
+  .datos {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
-  
-  .desc{
-    margin: 10px 20px 0px 0px;
-    text-align: center;
-    font-size: 20px;
-    color: #ffffff;
-  }
-  
- 

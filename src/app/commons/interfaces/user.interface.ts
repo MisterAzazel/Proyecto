@@ -20,7 +20,9 @@ export interface Product{
     name: string;
     price: number;
     stock: number;
-    img: string;
+    img: string | null;
+    destacado: boolean;
+    imageUrl: string | null; // Agrega la propiedad imageUrl de tipo string
 }
 
 export interface News{
@@ -28,4 +30,14 @@ export interface News{
     img: string;
     description: string;
     id: string;
+}
+
+export interface registroContacto{
+    id: string,
+    email: string,
+    name: string,
+    lastName: string,
+    message: string,
+    phone: number,
+    state: boolean,
 }

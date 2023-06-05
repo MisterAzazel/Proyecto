@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { ProductsService } from '../services/products.service';
 import { Product } from '../commons/interfaces/user.interface';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 
 @Component({
   selector: 'app-add-productos',
@@ -23,6 +25,7 @@ export class AddProductosPage implements OnInit {
   isFinalUser = false;
   _router = inject(Router);
   _productsService = inject(ProductsService)
+  selectedImage: File | null = null;
 
   constructor() { }
 
@@ -33,19 +36,49 @@ export class AddProductosPage implements OnInit {
   formProduct = new FormGroup({
     category: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+'), Validators.minLength(2)]),
     description: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+'), Validators.minLength(10)]),
-    img: new FormControl('', [Validators.required, Validators.minLength(8)]),
+    img: new FormControl('', [Validators.required]),
     name: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+')]),
     price: new FormControl(1, [Validators.required,Validators.pattern('[0-9]*'), Validators.minLength(1)]),
     stock: new FormControl(2, [Validators.required,Validators.pattern('[0-9]*'), Validators.minLength(1)]),
+    destacado: new FormControl(false, [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+'), Validators.minLength(2)]),
   });
 
-  addProduct(){
-    this._productsService.addProduct({  
-      id: new Date().getTime().toString(),
-      ...this.formProduct.getRawValue(),
-    } as Product).then(() => {
-      this._router.navigate(['crud-productos']);
-    });;
+  onFileSelected(event: any) {
+    this.selectedImage = event.target.files[0];
+  }
+
+  addProduct() {
+    const storage = getStorage();
+  
+    if (this.selectedImage) {
+      const fileName = `${new Date().getTime()}_${this.selectedImage.name}`;
+      const fileRef = ref(storage, fileName);
+  
+      uploadBytes(fileRef, this.selectedImage).then(() => {
+        // Obtiene la URL de descarga de la imagen subida
+        getDownloadURL(fileRef).then((imageUrl) => {
+          // Crea un objeto con los datos del producto
+          const productData: Product = {
+            id: new Date().getTime().toString(),
+            category: this.formProduct.get('category')!.value as string,
+            description: this.formProduct.get('description')!.value as string,
+            img: imageUrl, // Asigna directamente la URL de descarga al campo "img" del objeto productData
+            name: this.formProduct.get('name')!.value as string,
+            price: this.formProduct.get('price')!.value as number,
+            stock: this.formProduct.get('stock')!.value as number,
+            imageUrl: imageUrl,
+            destacado: this.formProduct.get('destacado')!.value as boolean,
+          };
+      
+          // Guarda el producto en Firestore
+          this._productsService.addProduct(productData).then(() => {
+            this._router.navigate(['crud-productos']);
+          });
+        });
+      });
+    } else {
+      console.log("Inserta una imagen");
+    }
   }
 
   getCurrentUser(){
@@ -56,26 +89,49 @@ export class AddProductosPage implements OnInit {
     // https://firebase.google.com/docs/reference/js/firebase.User
     const uid = user.uid;
     this.isLoggedIn = true;
-    if (user.email == 'admin@gmail.com') {
-      this.isAdmin = true;
-    }
-
-    else if (user.email == 'finaluser@gmail.com'){
-      this.isFinalUser = true;
-    }
-
-    else{
-      this.isAdmin = false;
-      this.isFinalUser = false;
-    }
-    
-    // ...
-  } else {
+    const email = user.email;
+    this.getUserDataByEmail(email);
+  }
+  // ...
+  else {
     this.isLoggedIn = false;
     // User is signed out
     // ...
   }
+    
 });
+  }
+
+getUserDataByEmail(email: any) {
+
+// Obtiene una referencia a la instancia de Firestore
+const db = getFirestore();
+    const usersRef = collection(db, 'users');
+    const q = query(usersRef, where('email', '==', email));
+    return getDocs(q)
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        console.log('ID:', doc.id); // ID del documento
+        console.log('Data:', doc.data()); // Todos los datos del documento  
+        if (doc.data()['role']['admin'] === true) {
+          this.isAdmin = true;
+        }
+    
+        else if (doc.data()['role']['final'] == true){
+          this.isFinalUser = true;
+        }
+    
+        else{
+          this.isAdmin = false;
+          this.isFinalUser = false;
+        }
+        
+        
+    });
+    })
+    .catch((error) => {
+      console.error('Error al obtener los datos:', error);
+    });
   }
 
   logOut(){

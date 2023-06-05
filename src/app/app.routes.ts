@@ -74,4 +74,20 @@ export const routes: Routes = [
     path: 'blog',
     loadComponent: () => import('./blog/blog.page').then( m => m.BlogPage)
   },
+  {
+    path: 'detalle-producto',
+    loadComponent: () => import('./detalle-producto/detalle-producto.page').then( m => m.DetalleProductoPage)
+  },
+  {
+    path: 'detalle-noticia',
+    loadComponent: () => import('./detalle-noticia/detalle-noticia.page').then( m => m.DetalleNoticiaPage)
+  },
+  {
+    path: 'lista-registros-contacto',
+    loadComponent: () => import('./lista-registros-contacto/lista-registros-contacto.page').then( m => m.ListaRegistrosContactoPage)
+  },
+  {
+    path: 'detalle-registros-contacto',
+    loadComponent: () => import('./detalle-registros-contacto/detalle-registros-contacto.page').then( m => m.DetalleRegistrosContactoPage)
+  },
 ];

@@ -26,6 +26,7 @@
   width: 200px;
   height: 200px;
   margin: auto;
+  object-fit: cover;
 }
 
 .name{
@@ -42,23 +43,15 @@
   
 }
 
-.desc{
+.desc, .stock{
   margin: 10px 20px 0px 0px;
   text-align: center;
   font-size: 20px;
-  color: #ffffff;
 }
 
-.icon-product{
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  font-size: 30px;
-  margin: 10px;
-  background: #d39e00;
-  padding: 10px;
-  border-radius: 100%;
-  color: white;
+
+.boton{
+  text-align: center;
 }
 
 

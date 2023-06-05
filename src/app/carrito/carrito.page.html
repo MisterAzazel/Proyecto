@@ -77,21 +77,35 @@
   <br>
   <br>
   <br>
+  <br>
+  <br>
 
   <div class="products">
     <ion-row>
-      <ion-col sizeLg="4" sizeXs="12"*ngFor=" let arr of objetos; let i = index" >
-        <ion-card *ngFor="let objeto of arr">
-        <ion-img class="img-product" [src]="objeto.img"></ion-img>
-        <ion-item>
-          <ion-label class="name">{{objeto.nombre_producto}}</ion-label>
-        </ion-item>
-        <p class="desc">{{objeto.description}}</p>
-        <p class="price">${{objeto.price}}</p>
-        <p class="compra">{{objeto.compra[i]}}</p>
-        <ion-button color="danger" (click)="borrar(objeto.nombre_producto)">Eliminar producto</ion-button>
-      </ion-card>
+      <ion-col sizeLg="4" sizeXs="12" *ngFor="let arr of objetos; let i = index">
+        <ion-card *ngFor="let objeto of arr" class="carta">
+          <ion-grid>
+            <ion-row>
+              <ion-col size="4">
+                <ion-img class="img-product" [src]="objeto.img"></ion-img>
+              </ion-col>
+              <ion-col size="8" class="datos">
+                <ion-card-title>{{ objeto.nombre_producto }}</ion-card-title>
+                <ion-card-subtitle>{{ objeto.description }}</ion-card-subtitle>
+                <ion-card-content>
+                  Precio unitario: ${{ objeto.price}}</ion-card-content>
+                <ion-card-content>Precio total: ${{ objeto.price * objeto.compra}}</ion-card-content>
+                <ion-card-content>Cantidad: {{ objeto.compra }}</ion-card-content>
+                <ion-button color="danger" (click)="borrar(objeto.id)">Eliminar producto</ion-button>
+              </ion-col>
+              
+            </ion-row>
+          </ion-grid>
+        </ion-card>
       </ion-col>
     </ion-row>
-    
   </div>
+
+
+  <ion-text>total a pagar: ${{precio_total}}</ion-text>
+  <ion-button (click)="guardarDatosEnFirebase()">Pagar</ion-button>

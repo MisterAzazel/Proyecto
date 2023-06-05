@@ -90,6 +90,9 @@
         <ion-label class="name">{{news.title}}</ion-label>
       </ion-item>
       <p class="desc">{{news.description}}</p>
+      <ion-button (click)="getNews(news)" expand="block" fill="clear" shape="round">
+        Detalles
+      </ion-button>
     </ion-card>
     </ion-col>
   </ion-row>

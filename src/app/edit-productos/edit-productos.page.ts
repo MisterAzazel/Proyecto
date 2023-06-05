@@ -7,6 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { ProductsService } from '../services/products.service';
 import { UsersService } from '../services/users.service';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getDownloadURL, getStorage, ref, uploadBytes, deleteObject  } from 'firebase/storage';
+import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 
 @Component({
   selector: 'app-edit-productos',
@@ -25,14 +27,17 @@ export class EditProductosPage implements OnInit {
   isAdmin = false;
   isLoggedIn = false;
   isFinalUser = false;
+  selectedImage: File | null = null;
+
   
   formEditProduct = new FormGroup({
     category: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+'), Validators.minLength(2)]),
     description: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+'), Validators.minLength(10)]),
-    img: new FormControl('', [Validators.required, Validators.minLength(8)]),
     name: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+')]),
+    img: new FormControl('', [Validators.required]),
     price: new FormControl(1, [Validators.required,Validators.pattern('[0-9]*'), Validators.minLength(1)]),
     stock: new FormControl(2, [Validators.required,Validators.pattern('[0-9]*'), Validators.minLength(1)]),
+    destacado: new FormControl(false, [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+'), Validators.minLength(2)]),
   });
 
   constructor() { }
@@ -48,19 +53,48 @@ export class EditProductosPage implements OnInit {
     this.formEditProduct.patchValue(this.product);
   }
 
+  onFileSelected(event: any) {
+    this.selectedImage = event.target.files[0];
+  }
+  
 
   updateProducts() {
-    console.log({
-      id: this.product.name,
-      ...this.formEditProduct.getRawValue(),
-    });
-
-    this._productsService.updateProduct({
-      id: this.product.name,
-      ...this.formEditProduct.getRawValue(),
-    } as Product);
-    this._router.navigate(['crud-productos']);
+    const storage = getStorage();
+    const productData: Product = {
+      id: this.product.id,
+      category: this.formEditProduct.get('category')!.value as string,
+      description: this.formEditProduct.get('description')!.value as string,
+      name: this.formEditProduct.get('name')!.value as string,
+      price: this.formEditProduct.get('price')!.value as number,
+      stock: this.formEditProduct.get('stock')!.value as number,
+      img: this.product.imageUrl, // Mantén la imagen existente si no se selecciona una nueva imagen
+      imageUrl: this.product.imageUrl, // Mantén la imagen existente si no se selecciona una nueva imagen
+      destacado: this.formEditProduct.get('destacado')!.value as boolean,
+    };
+  
+    if (this.selectedImage) {
+      const fileName = `${new Date().getTime()}_${this.selectedImage.name}`;
+      const fileRef = ref(storage, fileName);
+  
+      uploadBytes(fileRef, this.selectedImage).then(() => {
+        getDownloadURL(fileRef).then((imageUrl) => {
+          productData.img = imageUrl; // Asigna la nueva URL de descarga al campo "img" del objeto productData
+          productData.imageUrl = imageUrl; // Actualiza la URL de imagen en el objeto productData
+  
+          this.updateProductData(productData);
+        });
+      });
+    } else {
+      this.updateProductData(productData);
+    }
   }
+  
+  updateProductData(productData: Product) {
+    this._productsService.updateProduct(productData).then(() => {
+      this._router.navigate(['crud-productos']);
+    });
+  }
+  
 
   getCurrentUser(){
     const auth = getAuth();
@@ -70,26 +104,49 @@ export class EditProductosPage implements OnInit {
     // https://firebase.google.com/docs/reference/js/firebase.User
     const uid = user.uid;
     this.isLoggedIn = true;
-    if (user.email == 'admin@gmail.com') {
-      this.isAdmin = true;
-    }
-
-    else if (user.email == 'finaluser@gmail.com'){
-      this.isFinalUser = true;
-    }
-
-    else{
-      this.isAdmin = false;
-      this.isFinalUser = false;
-    }
-    
-    // ...
-  } else {
+    const email = user.email;
+    this.getUserDataByEmail(email);
+  }
+  // ...
+  else {
     this.isLoggedIn = false;
     // User is signed out
     // ...
   }
+    
 });
+  }
+
+getUserDataByEmail(email: any) {
+
+// Obtiene una referencia a la instancia de Firestore
+const db = getFirestore();
+    const usersRef = collection(db, 'users');
+    const q = query(usersRef, where('email', '==', email));
+    return getDocs(q)
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        console.log('ID:', doc.id); // ID del documento
+        console.log('Data:', doc.data()); // Todos los datos del documento  
+        if (doc.data()['role']['admin'] === true) {
+          this.isAdmin = true;
+        }
+    
+        else if (doc.data()['role']['final'] == true){
+          this.isFinalUser = true;
+        }
+    
+        else{
+          this.isAdmin = false;
+          this.isFinalUser = false;
+        }
+        
+        
+    });
+    })
+    .catch((error) => {
+      console.error('Error al obtener los datos:', error);
+    });
   }
 
   logOut(){

@@ -1,0 +1,108 @@
+<ion-content>
+  <ion-menu contentId="main-content" class="menu-main-content">
+    <ion-header>
+      <ion-toolbar color="tertiary">
+        <ion-title>Menu Content</ion-title>
+      </ion-toolbar>
+      <ion-list>
+        <ion-item href="/"><ion-icon name="chatbubble-outline"></ion-icon> Inicio</ion-item>
+        <ion-item href="/contacto"><ion-icon name="chatbox-ellipses-outline"></ion-icon> Contacto</ion-item>
+        <ion-item href="/nosotros"><ion-icon name="construct-outline"></ion-icon> Nosotros</ion-item>
+        <ion-item href="/noticias"><ion-icon name="construct-outline"></ion-icon> Noticias</ion-item>
+        <ion-item href="/panaderia"><ion-icon name="business-outline"></ion-icon> Panaderia</ion-item>
+        <ion-item href="/pasteleria"><ion-icon name="business-outline"></ion-icon> Pasteleria</ion-item>
+        <ion-item href="/blog"><ion-icon name="business-outline"></ion-icon> Blog</ion-item>
+        <ion-item href="/login" *ngIf="isLoggedIn == false"><ion-icon name="person-sharp"></ion-icon>Iniciar Sesión</ion-item>
+        <ion-item href="/" *ngIf="isLoggedIn == true" (click)="logOut()"><ion-icon name="person-sharp"></ion-icon>Cerrar Sesión</ion-item>
+        <ion-item href="/carrito" ><ion-icon name="cart"></ion-icon>Carrito</ion-item>
+        <ion-item href="/administracion" *ngIf="isAdmin == true || isFinalUser == true"><ion-icon name="person-sharp"></ion-icon>Administración</ion-item>
+      </ion-list>
+    </ion-header>
+    <ion-content class="ion-padding">This is the menu content.</ion-content>
+  </ion-menu>
+  <div class="ion-page" id="main-content">
+    <ion-header>
+      <ion-toolbar >
+        <ion-buttons slot="start" class="menu-button">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+          <ion-row class="header ion-align-items-center">
+            <ion-col size="1">
+              <img src="https://cdn.moriyashrine.org/monthly_2019_12/magnificent.thumb.jpeg.ca7c07940a465c57296f6aa13fbfb9cc.jpeg" width="50px">
+            </ion-col>
+            <ion-col size="10" class="ion-text-left">
+              <ion-button fill="clear"  href="/">
+              Inicio
+              </ion-button>
+              <ion-button fill="clear"  href="/contacto">
+              Contacto
+              </ion-button>
+              <ion-button fill="clear"  href="/nosotros">
+              Nosotros
+              </ion-button>
+              <ion-button fill="clear"  href="/noticias">
+              Noticias
+              </ion-button>
+              <ion-button fill="clear" href="/panaderia">
+              Panaderia
+              </ion-button>
+              <ion-button fill="clear" href="/pasteleria">
+              Pasteleria
+              </ion-button>
+              <ion-button fill="clear" href="/blog">
+                Blog
+              </ion-button>
+              <ion-button fill="clear" *ngIf="isLoggedIn == false" href="/login">
+              Iniciar sesión
+              </ion-button>
+              <ion-button fill="clear" *ngIf="isLoggedIn == true" (click)="logOut()" href="/">
+              Cerrar sesión
+              </ion-button>
+              <ion-button fill="clear" *ngIf="isAdmin == true || isFinalUser == true"  href="/administracion">
+              Administracion
+              </ion-button>
+            </ion-col>
+            <ion-col size="1" class="cart">
+              <ion-button fill="clear" href="/carrito">
+                <ion-icon slot="icon-only" name="cart" ></ion-icon>
+              </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-toolbar>
+    </ion-header>
+  </div>
+
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+
+  <ion-card>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="4">
+          <ion-img src="{{ formEditProduct.get('img')?.value }}"></ion-img>
+        </ion-col>
+        <ion-col size="8">
+          <ion-card-header>
+            <ion-card-title>Datos del producto</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-label>Descripción: {{ formEditProduct.get('description')?.value }}</ion-label>
+            <br>
+            <ion-label>Nombre: {{ formEditProduct.get('name')?.value }}</ion-label>
+            <br>
+            <ion-label>Precio: {{ formEditProduct.get('price')?.value }}</ion-label>
+            <br>
+            <ion-label>Stock: {{ formEditProduct.get('stock')?.value }}</ion-label>
+          </ion-card-content>
+          <ion-input aria-label="compra" class="form-control" type="number"  placeholder="Ingrese la cantidad de productos que comprara" [(ngModel)]="compra"></ion-input>
+          <ion-button (click)="onClick(product, compra)">Agregar al carrito</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+  
+
+    

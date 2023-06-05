@@ -80,6 +80,8 @@
   <br>
   <br>
 
+  <ion-content>
+
   <div class="products">
     <ion-row>
       <ion-col sizeLg="4" sizeXs="12"*ngFor=" let product of products; let i = index" >
@@ -91,9 +93,11 @@
         <p class="desc">{{product.description}}</p>
         <p class="price">${{product.price}}</p>
         <p class="stock">Stock: {{product.stock}}</p>
-        <ion-icon class="icon-product" name="cart-sharp"></ion-icon>
         <ion-input aria-label="compra" class="form-control" type="number"  placeholder="Ingrese la cantidad de productos que comprara" [(ngModel)]="compra[i]"></ion-input>
-        <ion-button (click)="onClick(product, compra)">Agregar</ion-button>
+        <ion-button (click)="onClick(product, compra[i])" expand="block" fill="clear" shape="round">Agregar al carrito</ion-button>
+        <ion-button (click)="getProduct(product)" expand="block" fill="clear" shape="round">
+          Detalles
+        </ion-button>
       </ion-card>
       </ion-col>
     </ion-row>

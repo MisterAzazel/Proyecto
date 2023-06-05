@@ -7,6 +7,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { Router } from '@angular/router';
 import { CartService } from '../services/cart.service';
 import { Product } from '../commons/interfaces/user.interface';
+import { addDoc, collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 
 @Component({
   selector: 'app-carrito',
@@ -25,6 +26,10 @@ export class CarritoPage implements OnInit {
   cartProducts: any[] = [];
   _cartService= inject(CartService);
   objetos: any[] = [];
+  precio_total: number = 0;
+  email: string = '';
+  nombre: string = '';
+  apellido: string= '';
 
   constructor() { }
 
@@ -32,6 +37,17 @@ export class CarritoPage implements OnInit {
     this.getCurrentUser();
     this.GetAll();
     console.log(this.objetos.keys())
+    this.calcularPrecioTotal();
+  }
+
+  calcularPrecioTotal() {
+    this.precio_total = 0; // Reinicia el valor a cero
+  
+    for (const arr of this.objetos) {
+      for (const objeto of arr) {
+        this.precio_total += objeto.price * objeto.compra;
+      }
+    }
   }
 
   GetAll() {
@@ -53,38 +69,92 @@ export class CarritoPage implements OnInit {
   }
 }
 
+guardarDatosEnFirebase() {
+  const db = getFirestore();
+  const docRef = collection(db, 'compras');
 
+  // Convertir this.objetos a un objeto plano
+  const productos = this.objetos.reduce((obj, arr) => {
+    arr.forEach((objeto: any) => {  // Especifica el tipo de datos de objeto
+      obj[objeto.nombre_producto] = objeto;
+    });
+    return obj;
+  }, {});
 
+  const data = {
+    id: new Date().getTime().toString(),
+    email_comprador: this.email,
+    nombre_comprador: this.nombre,
+    apellido_comprador: this.apellido,
+    productos: productos,
+    precio_total: this.precio_total,
+    state: false,
+  };
 
-  getCurrentUser(){
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-  if (user) {
-    // User is signed in, see docs for a list of available properties
-    // https://firebase.google.com/docs/reference/js/firebase.User
-    const uid = user.uid;
-    this.isLoggedIn = true;
-    if (user.email == 'admin@gmail.com') {
-      this.isAdmin = true;
-    }
+  addDoc(docRef, data)
+    .then((docRef) => {
+      console.log('Datos guardados en Firebase:', docRef.id);
+    })
+    .catch((error) => {
+      console.error('Error al guardar datos en Firebase:', error);
+    });
+}
 
-    else if (user.email == 'finaluser@gmail.com'){
-      this.isFinalUser = true;
-    }
-
-    else{
-      this.isAdmin = false;
-      this.isFinalUser = false;
-    }
-    
-    // ...
-  } else {
-    this.isLoggedIn = false;
-    // User is signed out
-    // ...
-  }
+getCurrentUser(){
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+if (user) {
+  // User is signed in, see docs for a list of available properties
+  // https://firebase.google.com/docs/reference/js/firebase.User
+  const uid = user.uid;
+  this.isLoggedIn = true;
+  const email = user.email;
+  this.getUserDataByEmail(email);
+}
+// ...
+else {
+  this.isLoggedIn = false;
+  // User is signed out
+  // ...
+}
+  
 });
-  }
+}
+
+getUserDataByEmail(email: any) {
+
+// Obtiene una referencia a la instancia de Firestore
+const db = getFirestore();
+  const usersRef = collection(db, 'users');
+  const q = query(usersRef, where('email', '==', email));
+  return getDocs(q)
+  .then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      console.log('ID:', doc.id); // ID del documento
+      console.log('Data:', doc.data()); // Todos los datos del documento  
+      this.email = doc.data()['email'];
+      this.nombre = doc.data()['name'];
+      this.apellido = doc.data()['lastName'];
+      if (doc.data()['role']['admin'] === true) {
+        this.isAdmin = true;
+      }
+  
+      else if (doc.data()['role']['final'] == true){
+        this.isFinalUser = true;
+      }
+  
+      else{
+        this.isAdmin = false;
+        this.isFinalUser = false;
+      }
+      
+      
+  });
+  })
+  .catch((error) => {
+    console.error('Error al obtener los datos:', error);
+  });
+}
 
   logOut(){
     this._userService.logOut()
@@ -97,6 +167,7 @@ export class CarritoPage implements OnInit {
   borrar(nombre: string){
     this._cartService.Delete(nombre);
     this.GetAll();
+    this.calcularPrecioTotal();
   }
  
 

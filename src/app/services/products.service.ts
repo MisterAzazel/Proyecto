@@ -26,6 +26,15 @@ export class ProductsService {
     return collectionData(q) as unknown as Observable<Product[]>;
   }
 
+  getDestacadoProduct(filter: string){
+    const productRef = collection(this.firestore, 'products');
+    let q = query(productRef);
+    if (filter) {
+      q = query(productRef, where('destacado', '==', filter));
+    }
+    return collectionData(q) as unknown as Observable<Product[]>;
+  }
+
   async updateProduct(product: Product) {
     const productsRef = collection(this.firestore, 'products');
     let q = query(productsRef, where('id', '==', product.id));
