@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { UsersService } from './../services/users.service';
+import { UsersService } from '../services/users.service';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
