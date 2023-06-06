@@ -13,9 +13,9 @@ import { ProductsService } from '../services/products.service';
 import { CartService } from '../services/cart.service';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  selector: 'app-index',
+  templateUrl: 'index.page.html',
+  styleUrls: ['index.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, ],
 })
