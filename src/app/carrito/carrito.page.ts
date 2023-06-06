@@ -8,10 +8,6 @@ import { Router } from '@angular/router';
 import { CartService } from '../services/cart.service';
 import { Product } from '../commons/interfaces/user.interface';
 import { addDoc, collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
-import { WebpayPlus } from 'transbank-sdk'; // ES6 Modules
-import { Options, IntegrationApiKeys, Environment, IntegrationCommerceCodes } from 'transbank-sdk'; // ES6 Modules
-
-
 
 @Component({
   selector: 'app-carrito',
@@ -54,70 +50,6 @@ export class CarritoPage implements OnInit {
     }
   }
 
-  crearTransaccion() {
-    const randomBuyOrder = Math.floor(Math.random() * 100000000);
-    const buyOrder = randomBuyOrder.toString().padStart(8, '0');
-    const sessionId = 'ID_de_sesión';
-    const amount = this.precio_total;
-    const returnUrl = 'http://localhost:4200/carrito';
-  
-    const tx = new WebpayPlus.Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS, IntegrationApiKeys.WEBPAY, Environment.Integration));
-  
-    tx.create(buyOrder, sessionId, amount, returnUrl)
-      .then(response => {
-        const token = response.token;
-        const url = response.url;
-  
-        const form = document.createElement('form');
-        form.method = 'post';
-        form.action = url;
-  
-        const tokenInput = document.createElement('input');
-        tokenInput.type = 'hidden';
-        tokenInput.name = 'token_ws';
-        tokenInput.value = token;
-  
-        const submitButton = document.createElement('input');
-        submitButton.type = 'submit';
-        submitButton.value = 'Ir a pagar';
-  
-        form.appendChild(tokenInput);
-        form.appendChild(submitButton);
-  
-        document.body.appendChild(form);
-        form.submit();
-  
-        // Llamar al backend para guardar datos y manejar la respuesta
-        this.llamarBackend(token, url);
-      })
-      .catch(error => {
-        console.error('Error al crear la transacción:', error);
-      });
-  }
-  
-  llamarBackend(token: string, url: string) {
-    const apiUrl = 'http://localhost:3000/api/webpay/v1.3/transactions';
-  
-    fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ token, url })
-    })
-      .then(response => response.json())
-      .then(data => {
-        // Manejar la respuesta de la API de Transbank devuelta por el servidor backend
-        console.log(data);
-      })
-      .catch(error => {
-        // Manejar errores de conexión o de la API
-        console.error(error);
-      });
-  }
-  
-
-
   GetAll() {
     // Obtener todas las claves del sessionStorage
   const keys = Object.keys(sessionStorage);
@@ -136,8 +68,6 @@ export class CarritoPage implements OnInit {
     }
   }
 }
-
-
 
 guardarDatosEnFirebase() {
   const db = getFirestore();
