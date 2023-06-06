@@ -6,7 +6,8 @@
       </ion-toolbar>
       <ion-list>
         <ion-item href="/"><ion-icon name="chatbubble-outline"></ion-icon> Inicio</ion-item>
-        <ion-item href="/contacto"><ion-icon name="chatbox-ellipses-outline"></ion-icon> Contacto</ion-item>
+        <ion-item href="/lista-registros-contacto" *ngIf="isAdmin == true || isFinalUser == true"><ion-icon name="chatbox-ellipses-outline"></ion-icon> Contacto</ion-item>
+        <ion-item href="/contacto" *ngIf="isAdmin == false && isFinalUser == false"><ion-icon name="chatbox-ellipses-outline"></ion-icon> Contacto</ion-item>
         <ion-item href="/nosotros"><ion-icon name="construct-outline"></ion-icon> Nosotros</ion-item>
         <ion-item href="/noticias"><ion-icon name="construct-outline"></ion-icon> Noticias</ion-item>
         <ion-item href="/panaderia"><ion-icon name="business-outline"></ion-icon> Panaderia</ion-item>
@@ -28,13 +29,16 @@
         </ion-buttons>
           <ion-row class="header ion-align-items-center">
             <ion-col size="1">
-              <img src="https://cdn.moriyashrine.org/monthly_2019_12/magnificent.thumb.jpeg.ca7c07940a465c57296f6aa13fbfb9cc.jpeg" width="50px">
+              <img src="assets/img/logo.jpg" width="50px">
             </ion-col>
             <ion-col size="10" class="ion-text-left">
               <ion-button fill="clear"  href="/">
               Inicio
               </ion-button>
-              <ion-button fill="clear"  href="/contacto">
+              <ion-button fill="clear" *ngIf="isAdmin == true || isFinalUser == true"  href="/lista-registros-contacto">
+              Contacto
+              </ion-button>
+              <ion-button fill="clear" *ngIf="isAdmin == false && isFinalUser == false" href="/contacto">
               Contacto
               </ion-button>
               <ion-button fill="clear"  href="/nosotros">
@@ -93,21 +97,14 @@
 
     <section class="column-center">
       <ion-card class="card">
-        <a href="/contacto"><ion-img class="image card-image" src="https://zurcanal.es/wp-content/uploads/2017/07/contacto.jpg"></ion-img></a>
+        <a href="/contacto"><ion-img class="image card-image" src="assets/img/contacto.jpg"></ion-img></a>
         <a href="/contacto"><div class="centered">Dudas, problemas? contactanos</div></a>
       </ion-card>
       <ion-card class="card">
-        <a href="/blog"><ion-img class="image card-image" src="https://www-static.cdn-one.com/cmsimages/en_what-is-a-blog-1.png"></ion-img></a>
+        <a href="/blog"><ion-img class="image card-image" src="assets/img/blog.png"></ion-img></a>
         <a href="/blog"><div class="centered">Blog redes sociales</div></a>
       </ion-card>
     </section>
-  
-    <ion-card class="sidebar">
-      <ion-card-content>
-        <ion-card-title>Sidebar</ion-card-title>
-        <p>Aquí va el contenido del sidebar</p>
-      </ion-card-content>
-    </ion-card>
 
     <h2 class="titulo">Productos destacados</h2>
     <!-- Aquí puedes mostrar los productos destacados -->

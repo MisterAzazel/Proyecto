@@ -10,6 +10,7 @@ import { Product } from '../commons/interfaces/user.interface';
 import { addDoc, collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 import { WebpayPlus } from 'transbank-sdk'; // ES6 Modules
 import { Options, IntegrationApiKeys, Environment, IntegrationCommerceCodes } from 'transbank-sdk'; // ES6 Modules
+import axios from 'axios';
 
 
 
@@ -59,14 +60,35 @@ export class CarritoPage implements OnInit {
     const buyOrder = randomBuyOrder.toString().padStart(8, '0');
     const sessionId = 'ID_de_sesión';
     const amount = this.precio_total;
-    const returnUrl = 'http://localhost:4200/carrito';
+    const returnUrl = '/carrito';
   
-    const tx = new WebpayPlus.Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS, IntegrationApiKeys.WEBPAY, Environment.Integration));
+    const tx = new WebpayPlus.Transaction(
+      new Options(
+        IntegrationCommerceCodes.WEBPAY_PLUS,
+        IntegrationApiKeys.WEBPAY,
+        Environment.Integration
+      )
+    );
   
     tx.create(buyOrder, sessionId, amount, returnUrl)
       .then(response => {
         const token = response.token;
         const url = response.url;
+  
+        const apiUrl = 'http://localhost:3000/api/transbank'; // Cambia la URL al servidor local
+  
+        axios
+          .post(apiUrl, { token, url })
+          .then(response => {
+            // Manejar la respuesta de Transbank devuelta por el servidor
+            console.log(response.data);
+  
+            // Resto de tu código...
+          })
+          .catch(error => {
+            // Manejar errores de conexión o de Transbank
+            console.error(error);
+          });
   
         const form = document.createElement('form');
         form.method = 'post';
@@ -86,36 +108,11 @@ export class CarritoPage implements OnInit {
   
         document.body.appendChild(form);
         form.submit();
-  
-        // Llamar al backend para guardar datos y manejar la respuesta
-        this.llamarBackend(token, url);
       })
       .catch(error => {
         console.error('Error al crear la transacción:', error);
       });
   }
-  
-  llamarBackend(token: string, url: string) {
-    const apiUrl = 'http://localhost:3000/api/webpay/v1.3/transactions';
-  
-    fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ token, url })
-    })
-      .then(response => response.json())
-      .then(data => {
-        // Manejar la respuesta de la API de Transbank devuelta por el servidor backend
-        console.log(data);
-      })
-      .catch(error => {
-        // Manejar errores de conexión o de la API
-        console.error(error);
-      });
-  }
-  
 
 
   GetAll() {

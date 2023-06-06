@@ -28,7 +28,7 @@
         </ion-buttons>
           <ion-row class="header ion-align-items-center">
             <ion-col size="1">
-              <img src="https://cdn.moriyashrine.org/monthly_2019_12/magnificent.thumb.jpeg.ca7c07940a465c57296f6aa13fbfb9cc.jpeg" width="50px">
+              <img src="assets/img/logo.jpg" width="50px">
             </ion-col>
             <ion-col size="10" class="ion-text-left">
               <ion-button fill="clear"  href="/">
@@ -82,14 +82,14 @@
 
   <div class="products">
     <ion-row>
-      <ion-col sizeLg="4" sizeXs="12" *ngFor="let arr of objetos; let i = index">
+      <ion-col sizeLg="12" sizeXs="12" *ngFor="let arr of objetos; let i = index">
         <ion-card *ngFor="let objeto of arr" class="carta">
           <ion-grid>
             <ion-row>
-              <ion-col size="4">
+              <ion-col size="2">
                 <ion-img class="img-product" [src]="objeto.img"></ion-img>
               </ion-col>
-              <ion-col size="8" class="datos">
+              <ion-col size="4" class="datos">
                 <ion-card-title>{{ objeto.nombre_producto }}</ion-card-title>
                 <ion-card-subtitle>{{ objeto.description }}</ion-card-subtitle>
                 <ion-card-content>
@@ -107,5 +107,7 @@
   </div>
 
 
-  <ion-text>total a pagar: ${{precio_total}}</ion-text>
-  <ion-button (click)="crearTransaccion()">Pagar</ion-button>
+  <div class="centrar">
+    <ion-text>total a pagar: ${{precio_total}}</ion-text>
+    <ion-button (click)="crearTransaccion()">Pagar</ion-button>
+  </div>

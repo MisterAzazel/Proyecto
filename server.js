@@ -1,42 +1,46 @@
-// Importar los módulos necesarios
 const express = require('express');
 const cors = require('cors');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const axios = require('axios');
+const { WebpayPlus, Options, Environment, IntegrationCommerceCodes, IntegrationApiKeys } = require('transbank-sdk');
 
-// Configurar el servidor backend
 const app = express();
-const port = 3000;
+app.use(cors());
 
-// Configurar los middleware de CORS
-app.use(cors({
-  origin: 'http://localhost:4200',
-  methods: ['GET', 'POST'],
-}));
+app.post('/api/token', (request, response) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Tbk-Api-Key-Id': '597055555532',
+    'Tbk-Api-Key-Secret': '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C',
+  };
 
-// Configurar el proxy para redirigir las solicitudes a la API de Transbank
-const proxyOptions = {
-  target: 'https://webpay3gint.transbank.cl',
-  changeOrigin: true,
-};
+  const url = 'https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.0/transactions';
+  
+  const datosDeCompra = {
+    buy_order: 'ordenCompra12345678',
+    session_id: 'sesion1234557545',
+    amount: 10000,
+    return_url: '/carrito',
+  };
 
-app.use('/api/webpay/v1.3/transactions', createProxyMiddleware(proxyOptions));
+  axios
+    .post(url, datosDeCompra, { headers })
+    .then(r => {
+      console.log('data => ', r.data);
+      const token = r.data.token;
+      const url = r.data.url;
 
-// Ruta para recibir las solicitudes desde el frontend
-app.post('/api/webpay/v1.3/transactions', (req, res) => {
-  // Obtener los datos del token y la URL desde el cuerpo de la solicitud
-  const { token, url } = req.body;
+      // Aquí puedes hacer lo que necesites con el token y la URL, como guardarlos en la base de datos, enviarlos al cliente, etc.
 
-  // Aquí puedes realizar cualquier procesamiento adicional con los datos recibidos
-  // ...
-
-  // Agregar la cabecera Access-Control-Allow-Origin en la respuesta
-  res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
-
-  // Enviar una respuesta al frontend (opcional)
-  res.json({ success: true });
+      // Resto de tu código...
+      return response.send(r.data);
+    })
+    .catch(e => {
+      console.log('error =>', e.response.data);
+      return response.status(500).send(e.response.data);
+    });
 });
 
-// Iniciar el servidor backend
+const port = 3000;
 app.listen(port, () => {
-  console.log(`Servidor backend en ejecución en http://localhost:${port}`);
+  console.log(`Servidor escuchando en el puerto ${port}`);
 });
