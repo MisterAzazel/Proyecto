@@ -98,7 +98,7 @@
                 <ion-card-content>Cantidad: {{ objeto.compra }}</ion-card-content>
                 <ion-button color="danger" (click)="borrar(objeto.id)">Eliminar producto</ion-button>
               </ion-col>
-              
+
             </ion-row>
           </ion-grid>
         </ion-card>
@@ -109,5 +109,5 @@
 
   <div class="centrar">
     <ion-text>total a pagar: ${{precio_total}}</ion-text>
-    <ion-button (click)="crearTransaccion()">Pagar</ion-button>
+    <ion-button (click)="realizarSolicitud()">Pagar</ion-button>
   </div>

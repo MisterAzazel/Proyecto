@@ -2,38 +2,38 @@
     background-color: black;
     outline: white;
   }
-  
+
   @media(min-width: 1024px){
     .menu-button{
       display: none;
     }
-  
+
     .menu-main-content{
       display: none;
     }
-  
-   
-    
+
+
+
   }
-  
+
   @media(max-width:1023px){
     .header{
       display: none;
     }
-  
+
   }
-  
+
   .carta {
     width: 100%; /* Establece la altura al 100% del viewport */
   }
-  
+
   ion-row,
   ion-col,
   ion-card,
   ion-grid {
     height: 100%; /* Hace que los elementos ocupen el 100% del contenedor */
   }
-  
+
   .datos {
     display: flex;
     flex-direction: column;

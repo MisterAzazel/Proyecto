@@ -8,9 +8,9 @@ import { Router } from '@angular/router';
 import { CartService } from '../services/cart.service';
 import { Product } from '../commons/interfaces/user.interface';
 import { addDoc, collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
-import { WebpayPlus } from 'transbank-sdk'; // ES6 Modules
-import { Options, IntegrationApiKeys, Environment, IntegrationCommerceCodes } from 'transbank-sdk'; // ES6 Modules
+import { WebpayPlus, Options, IntegrationApiKeys, Environment, IntegrationCommerceCodes } from 'transbank-sdk';
 import axios from 'axios';
+import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 
 
 
@@ -19,7 +19,7 @@ import axios from 'axios';
   templateUrl: './carrito.page.html',
   styleUrls: ['./carrito.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, HttpClientModule]
 })
 export class CarritoPage implements OnInit {
 
@@ -36,7 +36,7 @@ export class CarritoPage implements OnInit {
   nombre: string = '';
   apellido: string= '';
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
     this.getCurrentUser();
@@ -47,7 +47,7 @@ export class CarritoPage implements OnInit {
 
   calcularPrecioTotal() {
     this.precio_total = 0; // Reinicia el valor a cero
-  
+
     for (const arr of this.objetos) {
       for (const objeto of arr) {
         this.precio_total += objeto.price * objeto.compra;
@@ -55,64 +55,7 @@ export class CarritoPage implements OnInit {
     }
   }
 
-  crearTransaccion() {
-    const randomBuyOrder = Math.floor(Math.random() * 100000000);
-    const buyOrder = randomBuyOrder.toString().padStart(8, '0');
-    const sessionId = 'ID_de_sesión';
-    const amount = this.precio_total;
-    const returnUrl = '/carrito';
-  
-    const tx = new WebpayPlus.Transaction(
-      new Options(
-        IntegrationCommerceCodes.WEBPAY_PLUS,
-        IntegrationApiKeys.WEBPAY,
-        Environment.Integration
-      )
-    );
-  
-    tx.create(buyOrder, sessionId, amount, returnUrl)
-      .then(response => {
-        const token = response.token;
-        const url = response.url;
-  
-        const apiUrl = 'http://localhost:3000/api/transbank'; // Cambia la URL al servidor local
-  
-        axios
-          .post(apiUrl, { token, url })
-          .then(response => {
-            // Manejar la respuesta de Transbank devuelta por el servidor
-            console.log(response.data);
-  
-            // Resto de tu código...
-          })
-          .catch(error => {
-            // Manejar errores de conexión o de Transbank
-            console.error(error);
-          });
-  
-        const form = document.createElement('form');
-        form.method = 'post';
-        form.action = url;
-  
-        const tokenInput = document.createElement('input');
-        tokenInput.type = 'hidden';
-        tokenInput.name = 'token_ws';
-        tokenInput.value = token;
-  
-        const submitButton = document.createElement('input');
-        submitButton.type = 'submit';
-        submitButton.value = 'Ir a pagar';
-  
-        form.appendChild(tokenInput);
-        form.appendChild(submitButton);
-  
-        document.body.appendChild(form);
-        form.submit();
-      })
-      .catch(error => {
-        console.error('Error al crear la transacción:', error);
-      });
-  }
+
 
 
   GetAll() {
@@ -125,7 +68,7 @@ export class CarritoPage implements OnInit {
   // Iterar sobre las claves y obtener los objetos correspondientes
   for (const key of keys) {
     const value = sessionStorage.getItem(key);
-  
+
   if (value !== null) {
     const objeto = JSON.parse(value);
     this.objetos.push(objeto);
@@ -184,8 +127,53 @@ else {
   // User is signed out
   // ...
 }
-  
+
 });
+}
+
+createAndSubmitForm(url: string, token: string) {
+  const form = document.createElement('form');
+  form.action = url;
+  form.method = 'POST';
+
+  const tokenInput = document.createElement('input');
+  tokenInput.type = 'hidden';
+  tokenInput.name = 'token_ws';
+  tokenInput.value = token;
+
+  form.appendChild(tokenInput);
+  document.body.appendChild(form);
+  form.submit();
+}
+
+realizarSolicitud() {
+  const url = 'http://localhost:3000/rswebpaytransaction/api/webpay/v1.3/transactions';
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'Tbk-Api-Key-Id': '597055555532',
+    'Tbk-Api-Key-Secret': '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C'
+  };
+
+  const datosDeCompra = {
+    "buy_order": "ordenCompra12345678",
+    "session_id": "sesion1234557545",
+    "amount": this.precio_total,
+    "return_url": "http://localhost:4200/carrito"
+  };
+
+  axios.post(url, datosDeCompra, { headers: headers })
+    .then(response => {
+      console.log('Respuesta:', response.data);
+      const { url, token } = response.data; // Obtener la URL y el token de la respuesta
+
+      // Llamar a la función para crear y enviar el formulario automáticamente
+      this.createAndSubmitForm(url, token);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      console.log("Error:", error.response?.data);
+    });
 }
 
 getUserDataByEmail(email: any) {
@@ -197,25 +185,23 @@ const db = getFirestore();
   return getDocs(q)
   .then((querySnapshot) => {
     querySnapshot.forEach((doc) => {
-      console.log('ID:', doc.id); // ID del documento
-      console.log('Data:', doc.data()); // Todos los datos del documento  
       this.email = doc.data()['email'];
       this.nombre = doc.data()['name'];
       this.apellido = doc.data()['lastName'];
       if (doc.data()['role']['admin'] === true) {
         this.isAdmin = true;
       }
-  
+
       else if (doc.data()['role']['final'] == true){
         this.isFinalUser = true;
       }
-  
+
       else{
         this.isAdmin = false;
         this.isFinalUser = false;
       }
-      
-      
+
+
   });
   })
   .catch((error) => {
@@ -236,7 +222,7 @@ const db = getFirestore();
     this.GetAll();
     this.calcularPrecioTotal();
   }
- 
+
 
 }
 

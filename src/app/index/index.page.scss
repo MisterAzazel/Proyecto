@@ -12,8 +12,8 @@
     display: none;
   }
 
- 
-  
+
+
 }
 
 @media(max-width:1023px){
@@ -23,7 +23,23 @@
 
 }
 
+header{
+  background-color: #e08e00;
+  text-align: center;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
 
+header h1{
+  color: white;
+  font-size: 50px;
+}
+
+header img{
+  border-radius: 170px;
+  width: 300px;
+  border: 20px solid white;
+}
 
 .titulo{
   text-align: center;
@@ -89,7 +105,7 @@ h2 {
   font-size: 20px;
   color: #0062cc;
   font-weight: bold;
-  
+
 }
 
 .desc, .stock{
