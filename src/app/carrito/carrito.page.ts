@@ -11,8 +11,10 @@ import { addDoc, collection, getDocs, getFirestore, query, where } from 'firebas
 import { WebpayPlus, Options, IntegrationApiKeys, Environment, IntegrationCommerceCodes } from 'transbank-sdk';
 import axios from 'axios';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
-
-
+import html2canvas from 'html2canvas';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-carrito',
@@ -41,9 +43,20 @@ export class CarritoPage implements OnInit {
   ngOnInit() {
     this.getCurrentUser();
     this.GetAll();
-    console.log(this.objetos.keys())
     this.calcularPrecioTotal();
+    const transactionToken = localStorage.getItem('transactionToken');
+    const orderNumber = localStorage.getItem('orderNumber');
+    setTimeout(() => {
+      if (transactionToken) {
+        this.confirmarTransaccion(transactionToken, orderNumber);
+        this.verificarEstadoTransaccion(transactionToken, orderNumber);
+        localStorage.removeItem('transactionToken'); // Opcional: remover el token después de su uso
+        localStorage.removeItem('orderNumber');
+      }
+    }, 1200);
   }
+
+
 
   calcularPrecioTotal() {
     this.precio_total = 0; // Reinicia el valor a cero
@@ -79,7 +92,7 @@ export class CarritoPage implements OnInit {
 
 
 
-guardarDatosEnFirebase() {
+guardarDatosEnFirebase(token: string, orderNumber: string) {
   const db = getFirestore();
   const docRef = collection(db, 'compras');
 
@@ -92,13 +105,14 @@ guardarDatosEnFirebase() {
   }, {});
 
   const data = {
-    id: new Date().getTime().toString(),
+    orden_compra: orderNumber,
+    token: token,
     email_comprador: this.email,
     nombre_comprador: this.nombre,
     apellido_comprador: this.apellido,
     productos: productos,
     precio_total: this.precio_total,
-    state: false,
+    fecha: new Date().toLocaleDateString(),
   };
 
   addDoc(docRef, data)
@@ -131,6 +145,123 @@ else {
 });
 }
 
+getUserDataByEmail(email: any) {
+
+  // Obtiene una referencia a la instancia de Firestore
+  const db = getFirestore();
+    const usersRef = collection(db, 'users');
+    const q = query(usersRef, where('email', '==', email));
+    return getDocs(q)
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        this.email = doc.data()['email'];
+        this.nombre = doc.data()['name'];
+        this.apellido = doc.data()['lastName'];
+        if (doc.data()['role']['admin'] === true) {
+          this.isAdmin = true;
+        }
+
+        else if (doc.data()['role']['final'] == true){
+          this.isFinalUser = true;
+        }
+
+        else{
+          this.isAdmin = false;
+          this.isFinalUser = false;
+        }
+
+
+    });
+    })
+    .catch((error) => {
+      console.error('Error al obtener los datos:', error);
+    });
+  }
+
+generarPDF(orderNumber: string) {
+  // Obtener la fecha actual
+  const fechaActual = new Date().toLocaleDateString();
+
+  // Mapear los objetos para generar la lista de productos
+  const productList = this.objetos.reduce((result: any[], arr: any[]) => {
+    return result.concat(
+      arr.map((objeto: any) => [
+        { text: objeto.nombre_producto, alignment: 'center' },
+        { text: objeto.compra.toString(), alignment: 'center' },
+        { text: '$' + objeto.price, alignment: 'center' },
+        { text: '$' + (objeto.price * objeto.compra), alignment: 'center' }
+      ])
+    );
+  }, []);
+
+  // Agregar el precio total al final de la lista de productos
+  productList.push(['', '', '', { text: 'Total a Pagar: $' + this.precio_total, alignment: 'center' }]);
+
+  // Configuración del documento PDF
+  pdfMake.vfs = pdfFonts.pdfMake.vfs;
+  const docDefinition = {
+    content: [
+      // Título de la panadería
+      { text: 'Olivia Panadería y Pastelería Saludable', style: 'titulo' },
+
+      // Nombre del cliente
+      { text: 'Cliente: ' + this.nombre + ' ' + this.apellido, style: 'clienteHeader' },
+
+      // Orden de compra y fecha actual
+      {
+        columns: [
+          { text: 'Orden de Compra: ' + orderNumber, style: 'ordenCompra' },
+          { text: 'Fecha: ' + fechaActual, style: 'fecha' }
+        ]
+      },
+
+      // Tabla de productos
+      {
+        style: 'tablaProductos',
+        table: {
+          headerRows: 1,
+          widths: ['auto', 'auto', 'auto', 'auto'],
+          body: [
+            // Encabezados de la tabla
+            ['Nombre del Producto', 'Cantidad', 'Precio Unitario', 'Precio Total'],
+
+            // Filas de productos
+            ...productList
+          ]
+        }
+      }
+    ],
+    styles: {
+      titulo: {
+        fontSize: 24,
+        bold: true,
+        alignment: 'center',
+        margin: [0, 0, 0, 20] // Margen inferior de 20 unidades
+      },
+      clienteHeader: {
+        fontSize: 18,
+        bold: true,
+        margin: [0, 0, 0, 10] // Margen inferior de 10 unidades
+      },
+      ordenCompra: {
+        fontSize: 12,
+        bold: true
+      },
+      fecha: {
+        fontSize: 12,
+        margin: [10, 0, 0, 0] // Margen izquierdo de 10 unidades
+      },
+      tablaProductos: {
+        margin: [0, 10, 0, 20] // Margen inferior de 20 unidades
+      }
+    }
+  };
+
+  // Generar el PDF
+  const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+  pdfDocGenerator.download('boleta.pdf');
+}
+
 createAndSubmitForm(url: string, token: string) {
   const form = document.createElement('form');
   form.action = url;
@@ -146,68 +277,101 @@ createAndSubmitForm(url: string, token: string) {
   form.submit();
 }
 
+
+
 realizarSolicitud() {
-  const url = 'http://localhost:3000/rswebpaytransaction/api/webpay/v1.3/transactions';
 
-  const headers = {
-    'Content-Type': 'application/json',
-    'Tbk-Api-Key-Id': '597055555532',
-    'Tbk-Api-Key-Secret': '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C'
-  };
+  if (this.isLoggedIn == false) {
+    alert('Tienes que iniciar sesión para proceder al pago')
+  }
 
-  const datosDeCompra = {
-    "buy_order": "ordenCompra12345678",
-    "session_id": "sesion1234557545",
-    "amount": this.precio_total,
-    "return_url": "http://localhost:4200/carrito"
-  };
 
-  axios.post(url, datosDeCompra, { headers: headers })
-    .then(response => {
-      console.log('Respuesta:', response.data);
-      const { url, token } = response.data; // Obtener la URL y el token de la respuesta
+  else{
+    const url = 'http://localhost:3000/rswebpaytransaction/api/webpay/v1.3/transactions';
+    const orderNumber = Math.floor(10000000 + Math.random() * 90000000);
 
-      // Llamar a la función para crear y enviar el formulario automáticamente
-      this.createAndSubmitForm(url, token);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      console.log("Error:", error.response?.data);
-    });
+    const headers = {
+      'Content-Type': 'application/json',
+      'Tbk-Api-Key-Id': '597055555532',
+      'Tbk-Api-Key-Secret': '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C'
+    };
+
+    const datosDeCompra = {
+      "buy_order": orderNumber,
+      "session_id": "sesion1234557545",
+      "amount": this.precio_total,
+      "return_url": "http://localhost:4200/carrito",
+    };
+
+    axios.post(url, datosDeCompra, { headers: headers })
+      .then(response => {
+        console.log('Respuesta:', response.data);
+        const { url, token } = response.data; // Obtener la URL y el token de la respuesta
+
+        localStorage.setItem('transactionToken', token);
+        localStorage.setItem('orderNumber', orderNumber.toString())
+        // Llamar a la función para crear y enviar el formulario automáticamente
+        this.createAndSubmitForm(url, token);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        console.log("Error:", error.response?.data);
+      });
+  }
+
 }
 
-getUserDataByEmail(email: any) {
+confirmarTransaccion(token: string, orderNumber: string) {
+    const url = `http://localhost:3000/rswebpaytransaction/api/webpay/v1.3/transactions/${token}`;
 
-// Obtiene una referencia a la instancia de Firestore
-const db = getFirestore();
-  const usersRef = collection(db, 'users');
-  const q = query(usersRef, where('email', '==', email));
-  return getDocs(q)
-  .then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      this.email = doc.data()['email'];
-      this.nombre = doc.data()['name'];
-      this.apellido = doc.data()['lastName'];
-      if (doc.data()['role']['admin'] === true) {
-        this.isAdmin = true;
-      }
+    const headers = {
+      'Content-Type': 'application/json',
+      'Tbk-Api-Key-Id': '597055555532',
+      'Tbk-Api-Key-Secret': '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C'
+    };
 
-      else if (doc.data()['role']['final'] == true){
-        this.isFinalUser = true;
-      }
+    axios.put(url, {}, { headers: headers })
+      .then(response => {
+        console.log('Respuesta de confirmación:', response.data);
+        const status = response.data.status;
+        if (status === 'AUTHORIZED') {
+          this.generarPDF(orderNumber);
+          this.guardarDatosEnFirebase(token, orderNumber);
+        } else {
+          console.log('La transacción no fue autorizada.');
+        }
+      })
+      .catch(error => {
+        console.error('Error al confirmar la transacción:', error);
+      });
+  }
 
-      else{
-        this.isAdmin = false;
-        this.isFinalUser = false;
-      }
+  verificarEstadoTransaccion(token: string, orderNumber: string) {
+    const url = `http://localhost:3000/rswebpaytransaction/api/webpay/v1.3/transactions/${token}`;
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Tbk-Api-Key-Id': '597055555532',
+      'Tbk-Api-Key-Secret': '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C'
+    };
+
+    axios.get(url, { headers: headers })
+      .then(response => {
+        console.log('Estado de la transacción:', response.data);
+        const status = response.data.status;
+        if (status === 'AUTHORIZED') {
+          this.generarPDF(orderNumber);
+          this.guardarDatosEnFirebase(token, orderNumber);
+        } else {
+          console.log('La transacción no fue autorizada.');
+        }
+      })
+      .catch(error => {
+        console.error('Error al verificar el estado de la transacción:', error);
+      });
+  }
 
 
-  });
-  })
-  .catch((error) => {
-    console.error('Error al obtener los datos:', error);
-  });
-}
 
   logOut(){
     this._userService.logOut()
@@ -221,6 +385,10 @@ const db = getFirestore();
     this._cartService.Delete(nombre);
     this.GetAll();
     this.calcularPrecioTotal();
+  }
+
+  borrarTodo(){
+    sessionStorage.clear();
   }
 
 

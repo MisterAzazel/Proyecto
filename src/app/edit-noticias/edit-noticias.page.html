@@ -94,7 +94,8 @@
         <ion-icon name="person-sharp"></ion-icon>
         <ion-item>
           <ion-label position="floating">Descripción</ion-label>
-          <ion-input  aria-label="desc" type="text" class="form-control" formControlName="description"></ion-input>
+          <ion-textarea rows="10" aria-label="desc" type="text" class="form-control" formControlName="description"></ion-textarea>
+          <!--<ion-input  aria-label="desc" type="text" class="form-control" formControlName="description"></ion-input>-->
         </ion-item>
       </div>
       <div class="form-input">
@@ -107,5 +108,5 @@
     </div>
 
     <ion-button [disabled]="formEditNews.invalid" (click)="updateNews()">Guardar</ion-button>
-    
+
   </div>

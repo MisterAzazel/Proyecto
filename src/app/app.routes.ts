@@ -90,4 +90,8 @@ export const routes: Routes = [
     path: 'detalle-registros-contacto',
     loadComponent: () => import('./detalle-registros-contacto/detalle-registros-contacto.page').then( m => m.DetalleRegistrosContactoPage)
   },
+  {
+    path: 'boleta',
+    loadComponent: () => import('./boleta/boleta.page').then( m => m.BoletaPage)
+  },
 ];

@@ -28,7 +28,9 @@ export class DetalleRegistrosContactoPage implements OnInit {
   _location = inject(Location);
   registroContacto!: registroContacto;
   private fromEmail = 'your-email@example.com';
-  
+  private sendGridUrl = 'https://api.sendgrid.com/v3/mail/send';
+  private apiKey = environment.sendgridApiKey;
+
 
 
   formContact = new FormGroup({
@@ -45,6 +47,7 @@ export class DetalleRegistrosContactoPage implements OnInit {
     this.getCurrentUser();
     console.log(this._location.getState());
     this.registroContacto = (this._location.getState() as any).registroContacto as registroContacto;
+    this.sendEmail();
     if (this.registroContacto) this.setCurrentContacto(this.registroContacto);
   }
 
@@ -54,7 +57,40 @@ export class DetalleRegistrosContactoPage implements OnInit {
     this.formContact.patchValue(this.registroContacto);
   }
 
- 
+
+  sendEmail() {
+    const emailData = {
+      personalizations: [
+        {
+          to: [{ email: 'josue20650@example.com' }]
+        }
+      ],
+      from: { email: 'makotomistwalker@example.com' },
+      subject: 'Hello from SendGrid',
+      content: [
+        {
+          type: 'text/plain',
+          value: 'This is a test email from SendGrid.'
+        }
+      ]
+    };
+
+    this.http
+      .post<any>(this.sendGridUrl, emailData, {
+        headers: {
+          Authorization: `Bearer ${this.apiKey}` // Corrección en la concatenación
+        }
+      })
+      .subscribe(
+        response => {
+          console.log('Correo enviado:', response);
+          // Aquí puedes realizar acciones adicionales después de enviar el correo
+        },
+        error => {
+          console.error('Error al enviar el correo:', error);
+        }
+      );
+  }
 
   getCurrentUser(){
     const auth = getAuth();
@@ -73,7 +109,7 @@ export class DetalleRegistrosContactoPage implements OnInit {
     // User is signed out
     // ...
   }
-    
+
   });
   }
 
@@ -89,17 +125,17 @@ const db = getFirestore();
       if (doc.data()['role']['admin'] === true) {
         this.isAdmin = true;
       }
-  
+
       else if (doc.data()['role']['final'] == true){
         this.isFinalUser = true;
       }
-  
+
       else{
         this.isAdmin = false;
         this.isFinalUser = false;
       }
-      
-      
+
+
   });
   })
   .catch((error) => {

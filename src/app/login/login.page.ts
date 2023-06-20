@@ -39,7 +39,7 @@ export class LoginPage implements OnInit {
   login(){
     this._userService.login(this.formLogin.value)
     .then(response =>{
-      this._router.navigate(['/home']);
+      this._router.navigate(['/index']);
       console.log(response);
     })
     .catch(error => console.log(error));
@@ -62,7 +62,7 @@ export class LoginPage implements OnInit {
     // User is signed out
     // ...
   }
-    
+
 });
   }
 
@@ -76,21 +76,21 @@ const db = getFirestore();
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         console.log('ID:', doc.id); // ID del documento
-        console.log('Data:', doc.data()); // Todos los datos del documento  
+        console.log('Data:', doc.data()); // Todos los datos del documento
         if (doc.data()['role']['admin'] === true) {
           this.isAdmin = true;
         }
-    
+
         else if (doc.data()['role']['final'] == true){
           this.isFinalUser = true;
         }
-    
+
         else{
           this.isAdmin = false;
           this.isFinalUser = false;
         }
-        
-        
+
+
     });
     })
     .catch((error) => {

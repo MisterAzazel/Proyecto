@@ -1,0 +1,31 @@
+.header{
+    background-color: black;
+    outline: white;
+  }
+
+  @media(min-width: 1024px){
+    .menu-button{
+      display: none;
+    }
+
+    .menu-main-content{
+      display: none;
+    }
+
+
+
+  }
+
+  @media(max-width:1023px){
+    .header{
+      display: none;
+    }
+
+  }
+
+  .centrar{
+    align-items: center ;
+    align-content: center;
+    text-align: center;
+    font-size: 24px;
+  }

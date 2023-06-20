@@ -81,12 +81,12 @@
   <br>
 
   <div class="products">
-    <ion-row>
-      <ion-col sizeLg="12" sizeXs="12" *ngFor="let arr of objetos; let i = index">
+    <ion-row class="ion-justify-content-center ion-align-items-center">
+      <ion-col sizeLg="6" sizeXs="12" *ngFor="let arr of objetos; let i = index">
         <ion-card *ngFor="let objeto of arr" class="carta">
           <ion-grid>
             <ion-row>
-              <ion-col size="2">
+              <ion-col size="4">
                 <ion-img class="img-product" [src]="objeto.img"></ion-img>
               </ion-col>
               <ion-col size="4" class="datos">
@@ -111,3 +111,4 @@
     <ion-text>total a pagar: ${{precio_total}}</ion-text>
     <ion-button (click)="realizarSolicitud()">Pagar</ion-button>
   </div>
+
