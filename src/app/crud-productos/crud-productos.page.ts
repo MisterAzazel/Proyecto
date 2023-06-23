@@ -43,7 +43,7 @@ export class CrudProductosPage implements OnInit {
   });
 
   addProduct(){
-    this._productsService.addProduct({  
+    this._productsService.addProduct({
       id: new Date().getTime().toString(),
       ...this.formProduct.getRawValue(),
     } as Product);
@@ -62,7 +62,7 @@ export class CrudProductosPage implements OnInit {
   }
 
   deleteProduct(product: Product) {
-    if (confirm(`Seguro de borrar a ${product.id}`)) {
+    if (confirm(`Seguro de borrar a ${product.name}`)) {
       this._productsService.deleteProduct(product.id);
     }
   }
@@ -84,7 +84,7 @@ export class CrudProductosPage implements OnInit {
     // User is signed out
     // ...
   }
-    
+
 });
   }
 
@@ -98,21 +98,21 @@ const db = getFirestore();
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         console.log('ID:', doc.id); // ID del documento
-        console.log('Data:', doc.data()); // Todos los datos del documento  
+        console.log('Data:', doc.data()); // Todos los datos del documento
         if (doc.data()['role']['admin'] === true) {
           this.isAdmin = true;
         }
-    
+
         else if (doc.data()['role']['final'] == true){
           this.isFinalUser = true;
         }
-    
+
         else{
           this.isAdmin = false;
           this.isFinalUser = false;
         }
-        
-        
+
+
     });
     })
     .catch((error) => {

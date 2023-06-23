@@ -41,19 +41,23 @@ export class CarritoPage implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
+    setTimeout(() => {
+
+    }, 1000);
     this.getCurrentUser();
     this.GetAll();
     this.calcularPrecioTotal();
     const transactionToken = localStorage.getItem('transactionToken');
     const orderNumber = localStorage.getItem('orderNumber');
+    if (transactionToken) {
+    alert("Tu boleta se descargara automaticamente (tiempo estimado 5 segundos), si no se descarga o sucede algun otro problema, vaya a la seccion 'boleta'  ")
     setTimeout(() => {
-      if (transactionToken) {
         this.confirmarTransaccion(transactionToken, orderNumber);
         this.verificarEstadoTransaccion(transactionToken, orderNumber);
         localStorage.removeItem('transactionToken'); // Opcional: remover el token después de su uso
         localStorage.removeItem('orderNumber');
-      }
-    }, 1200);
+    }, 2000);
+    }
   }
 
 
@@ -113,11 +117,15 @@ guardarDatosEnFirebase(token: string, orderNumber: string) {
     productos: productos,
     precio_total: this.precio_total,
     fecha: new Date().toLocaleDateString(),
+    estado: 'Completado',
   };
 
   addDoc(docRef, data)
     .then((docRef) => {
       console.log('Datos guardados en Firebase:', docRef.id);
+      setTimeout(() => {
+        this.borrarTodo()
+      }, 3000);
     })
     .catch((error) => {
       console.error('Error al guardar datos en Firebase:', error);
@@ -389,6 +397,8 @@ confirmarTransaccion(token: string, orderNumber: string) {
 
   borrarTodo(){
     sessionStorage.clear();
+    this.GetAll();
+    this.calcularPrecioTotal();
   }
 
 

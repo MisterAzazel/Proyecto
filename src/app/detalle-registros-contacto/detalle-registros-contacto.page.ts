@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-import { FormControl, FormGroup, FormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { UsersService } from '../services/users.service';
 import { Router } from '@angular/router';
@@ -10,17 +10,19 @@ import { registroContacto } from '../commons/interfaces/user.interface';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { error } from 'console';
+import { ContactoService } from '../services/contacto.service';
 
 @Component({
   selector: 'app-detalle-registros-contacto',
   templateUrl: './detalle-registros-contacto.page.html',
   styleUrls: ['./detalle-registros-contacto.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, HttpClientModule]
+  imports: [IonicModule, CommonModule, FormsModule, HttpClientModule, ReactiveFormsModule]
 })
 export class DetalleRegistrosContactoPage implements OnInit {
 
   _userService = inject(UsersService);
+  _registroContacto = inject(ContactoService);
   isAdmin = false;
   isLoggedIn = false;
   isFinalUser = false;
@@ -39,6 +41,7 @@ export class DetalleRegistrosContactoPage implements OnInit {
     phone: new FormControl(1, [Validators.required, Validators.minLength(8)]),
     lastName: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+')]),
     message: new FormControl('', [Validators.required, Validators.minLength(8)]),
+    state: new FormControl(false),
   });
 
   constructor(private http: HttpClient) { }
@@ -47,7 +50,6 @@ export class DetalleRegistrosContactoPage implements OnInit {
     this.getCurrentUser();
     console.log(this._location.getState());
     this.registroContacto = (this._location.getState() as any).registroContacto as registroContacto;
-    this.sendEmail();
     if (this.registroContacto) this.setCurrentContacto(this.registroContacto);
   }
 
@@ -57,15 +59,30 @@ export class DetalleRegistrosContactoPage implements OnInit {
     this.formContact.patchValue(this.registroContacto);
   }
 
+  async actualizarEstadoConsulta() {
+    const nuevoEstado = this.formContact.get('state').value; // Obtener el nuevo estado
 
+    console.log(nuevoEstado); // Verificar el valor del estado en la consola
+
+    // Actualizar el registro de contacto
+    if (this.registroContacto) {
+      this.registroContacto.state = nuevoEstado;
+      await this._registroContacto.updateRegistroContacto(this.registroContacto);
+      this._router.navigate(['lista-registros-contacto']);
+    }
+  }
+
+
+  /*Nuestra idea era poder enviar un corre desde esta pagina para responder inmediatamente al usuario, pero no hemos podido
+  lograrlo
   sendEmail() {
     const emailData = {
       personalizations: [
         {
-          to: [{ email: 'josue20650@example.com' }]
+          to: [{ email: 'insertar correo' }]
         }
       ],
-      from: { email: 'makotomistwalker@example.com' },
+      from: { email: 'insertar correo' },
       subject: 'Hello from SendGrid',
       content: [
         {
@@ -90,7 +107,7 @@ export class DetalleRegistrosContactoPage implements OnInit {
           console.error('Error al enviar el correo:', error);
         }
       );
-  }
+  }*/
 
   getCurrentUser(){
     const auth = getAuth();

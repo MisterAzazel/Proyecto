@@ -1,24 +1,24 @@
-<ion-content>
+<ion-content >
   <ion-menu contentId="main-content" class="menu-main-content">
     <ion-header>
       <ion-toolbar color="tertiary">
         <ion-title>Menu Content</ion-title>
       </ion-toolbar>
       <ion-list>
-        <ion-item href="/"><ion-icon name="chatbubble-outline"></ion-icon> Inicio</ion-item>
-        <ion-item href="/contacto"><ion-icon name="chatbox-ellipses-outline"></ion-icon> Contacto</ion-item>
-        <ion-item href="/nosotros"><ion-icon name="construct-outline"></ion-icon> Nosotros</ion-item>
-        <ion-item href="/noticias"><ion-icon name="construct-outline"></ion-icon> Noticias</ion-item>
-        <ion-item href="/panaderia"><ion-icon name="business-outline"></ion-icon> Panaderia</ion-item>
-        <ion-item href="/pasteleria"><ion-icon name="business-outline"></ion-icon> Pasteleria</ion-item>
-        <ion-item href="/blog"><ion-icon name="business-outline"></ion-icon> Blog</ion-item>
-        <ion-item href="/login" *ngIf="isLoggedIn == false"><ion-icon name="person-sharp"></ion-icon>Iniciar Sesión</ion-item>
-        <ion-item href="/" *ngIf="isLoggedIn == true" (click)="logOut()"><ion-icon name="person-sharp"></ion-icon>Cerrar Sesión</ion-item>
-        <ion-item href="/carrito" ><ion-icon name="cart"></ion-icon>Carrito</ion-item>
-        <ion-item href="/administracion" *ngIf="isAdmin == true || isFinalUser == true"><ion-icon name="person-sharp"></ion-icon>Administración</ion-item>
+        <ion-item href="/">Inicio</ion-item>
+        <ion-item href="/contacto" *ngIf="isAdmin == false && isFinalUser == false">Contacto</ion-item>
+        <ion-item href="/nosotros">Nosotros</ion-item>
+        <ion-item href="/noticias">Noticias</ion-item>
+        <ion-item href="/panaderia">Panaderia</ion-item>
+        <ion-item href="/pasteleria">Pasteleria</ion-item>
+        <ion-item href="/blog">Blog</ion-item>
+        <ion-item href="/login" *ngIf="isLoggedIn == false">Iniciar Sesión</ion-item>
+        <ion-item href="/" *ngIf="isLoggedIn == true" (click)="logOut()">Cerrar Sesión</ion-item>
+        <ion-item href="/carrito">Carrito</ion-item>
+        <ion-item href="/boleta"  *ngIf="isLoggedIn == true && isAdmin == false && isFinalUser == false">Compras</ion-item>
+        <ion-item href="/administracion" *ngIf="isAdmin == true || isFinalUser == true">Administración</ion-item>
       </ion-list>
     </ion-header>
-    <ion-content class="ion-padding">This is the menu content.</ion-content>
   </ion-menu>
   <div class="ion-page" id="main-content">
     <ion-header>
@@ -34,7 +34,7 @@
               <ion-button fill="clear"  href="/">
               Inicio
               </ion-button>
-              <ion-button fill="clear"  href="/contacto">
+              <ion-button fill="clear" *ngIf="isAdmin == false && isFinalUser == false" href="/contacto">
               Contacto
               </ion-button>
               <ion-button fill="clear"  href="/nosotros">
@@ -50,7 +50,10 @@
               Pasteleria
               </ion-button>
               <ion-button fill="clear" href="/blog">
-                Blog
+              Blog
+              </ion-button>
+              <ion-button fill="clear" href="/boleta" *ngIf="isLoggedIn == true && isAdmin == false && isFinalUser == false">
+              Boleta
               </ion-button>
               <ion-button fill="clear" *ngIf="isLoggedIn == false" href="/login">
               Iniciar sesión
@@ -76,6 +79,11 @@
   <br>
   <br>
   <br>
+  <br>
+
+  <div class="centrar">
+    <ion-button href="/crud-productos" >Volver</ion-button>
+  </div>
 
   <div class="register-section ion-padding">
     <div class="heading ion-padding">
@@ -92,7 +100,7 @@
       <div class="form-input">
         <ion-item>
           <ion-label position="floating">Descripción</ion-label>
-          <ion-textarea rows="10" aria-label="desc" type="text" class="form-control" formControlName="description"></ion-textarea>
+          <ion-textarea rows="10" aria-label="desc" type="text" placeholder="Ingrese la descripción del producto" class="form-control" formControlName="description"></ion-textarea>
           <!--<ion-input  aria-label="name" type="text" class="form-control" formControlName="description"></ion-input>-->
         </ion-item>
       </div>
@@ -103,14 +111,14 @@
       </div>
       <div class="form-input">
         <ion-item>
-          <ion-label position="floating">name</ion-label>
-          <ion-input  aria-label="name" type="text" clearOnEdit="false" class="form-control" formControlName="name"></ion-input>
+          <ion-label position="floating">Nombre del producto</ion-label>
+          <ion-input  aria-label="name" type="text" clearOnEdit="false" placeholder="Ingrese el nombre del producto" class="form-control" formControlName="name"></ion-input>
         </ion-item>
       </div>
       <div class="form-input">
         <ion-item>
-          <ion-label position="floating">price</ion-label>
-          <ion-input aria-label="price" type="number" class="form-control" formControlName="price"></ion-input>
+          <ion-label position="floating">Precio</ion-label>
+          <ion-input aria-label="price" type="number" class="form-control" placeholder="Ingrese el precio del producto" formControlName="price"></ion-input>
         </ion-item>
       </div>
       <div class="form-input">

@@ -29,7 +29,7 @@ export class EditProductosPage implements OnInit {
   isFinalUser = false;
   selectedImage: File | null = null;
 
-  
+
   formEditProduct = new FormGroup({
     category: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+'), Validators.minLength(2)]),
     description: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+'), Validators.minLength(10)]),
@@ -56,7 +56,7 @@ export class EditProductosPage implements OnInit {
   onFileSelected(event: any) {
     this.selectedImage = event.target.files[0];
   }
-  
+
 
   updateProducts() {
     const storage = getStorage();
@@ -71,16 +71,16 @@ export class EditProductosPage implements OnInit {
       imageUrl: this.product.imageUrl, // Mantén la imagen existente si no se selecciona una nueva imagen
       destacado: this.formEditProduct.get('destacado')!.value as boolean,
     };
-  
+
     if (this.selectedImage) {
       const fileName = `${new Date().getTime()}_${this.selectedImage.name}`;
       const fileRef = ref(storage, fileName);
-  
+
       uploadBytes(fileRef, this.selectedImage).then(() => {
         getDownloadURL(fileRef).then((imageUrl) => {
           productData.img = imageUrl; // Asigna la nueva URL de descarga al campo "img" del objeto productData
           productData.imageUrl = imageUrl; // Actualiza la URL de imagen en el objeto productData
-  
+
           this.updateProductData(productData);
         });
       });
@@ -88,13 +88,13 @@ export class EditProductosPage implements OnInit {
       this.updateProductData(productData);
     }
   }
-  
+
   updateProductData(productData: Product) {
     this._productsService.updateProduct(productData).then(() => {
       this._router.navigate(['crud-productos']);
     });
   }
-  
+
 
   getCurrentUser(){
     const auth = getAuth();
@@ -113,7 +113,7 @@ export class EditProductosPage implements OnInit {
     // User is signed out
     // ...
   }
-    
+
 });
   }
 
@@ -127,21 +127,21 @@ const db = getFirestore();
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         console.log('ID:', doc.id); // ID del documento
-        console.log('Data:', doc.data()); // Todos los datos del documento  
+        console.log('Data:', doc.data()); // Todos los datos del documento
         if (doc.data()['role']['admin'] === true) {
           this.isAdmin = true;
         }
-    
+
         else if (doc.data()['role']['final'] == true){
           this.isFinalUser = true;
         }
-    
+
         else{
           this.isAdmin = false;
           this.isFinalUser = false;
         }
-        
-        
+
+
     });
     })
     .catch((error) => {

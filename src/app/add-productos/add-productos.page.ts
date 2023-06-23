@@ -39,7 +39,7 @@ export class AddProductosPage implements OnInit {
     img: new FormControl('', [Validators.required]),
     name: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+')]),
     price: new FormControl(1, [Validators.required,Validators.pattern('[0-9]*'), Validators.minLength(1)]),
-    stock: new FormControl(2, [Validators.required,Validators.pattern('[0-9]*'), Validators.minLength(1)]),
+    stock: new FormControl(1, [Validators.required,Validators.pattern('[0-9]*'), Validators.minLength(1)]),
     destacado: new FormControl(false, [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+'), Validators.minLength(2)]),
   });
 
@@ -49,11 +49,11 @@ export class AddProductosPage implements OnInit {
 
   addProduct() {
     const storage = getStorage();
-  
+
     if (this.selectedImage) {
       const fileName = `${new Date().getTime()}_${this.selectedImage.name}`;
       const fileRef = ref(storage, fileName);
-  
+
       uploadBytes(fileRef, this.selectedImage).then(() => {
         // Obtiene la URL de descarga de la imagen subida
         getDownloadURL(fileRef).then((imageUrl) => {
@@ -69,7 +69,7 @@ export class AddProductosPage implements OnInit {
             imageUrl: imageUrl,
             destacado: this.formProduct.get('destacado')!.value as boolean,
           };
-      
+
           // Guarda el producto en Firestore
           this._productsService.addProduct(productData).then(() => {
             this._router.navigate(['crud-productos']);
@@ -98,7 +98,7 @@ export class AddProductosPage implements OnInit {
     // User is signed out
     // ...
   }
-    
+
 });
   }
 
@@ -112,21 +112,21 @@ const db = getFirestore();
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         console.log('ID:', doc.id); // ID del documento
-        console.log('Data:', doc.data()); // Todos los datos del documento  
+        console.log('Data:', doc.data()); // Todos los datos del documento
         if (doc.data()['role']['admin'] === true) {
           this.isAdmin = true;
         }
-    
+
         else if (doc.data()['role']['final'] == true){
           this.isFinalUser = true;
         }
-    
+
         else{
           this.isAdmin = false;
           this.isFinalUser = false;
         }
-        
-        
+
+
     });
     })
     .catch((error) => {

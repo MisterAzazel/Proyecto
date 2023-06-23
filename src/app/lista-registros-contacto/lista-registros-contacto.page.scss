@@ -2,42 +2,59 @@
     background-color: black;
     outline: white;
   }
-  
+
   @media(min-width: 1024px){
     .menu-button{
       display: none;
     }
-  
+
     .menu-main-content{
       display: none;
     }
-  
-   
-    
+    .carta{
+      display: none;
+    }
+
+
+
   }
-  
+
   @media(max-width:1023px){
     .header{
       display: none;
     }
-  
+
+    .carta{
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .table{
+      display: none;
+    }
+
   }
-  
+
   .table {
     width: 100%;
     border-collapse: collapse;
   }
-  
+
   .table th,
   .table td {
     padding: 10px;
     text-align: left;
     border: 1px solid #ddd;
   }
-  
+
   @media (max-width: 600px) {
     .table th,
     .table td {
       font-size: 14px;
     }
+  }
+
+  .centrar{
+    text-align: center;
   }

@@ -34,8 +34,8 @@ export class HomePage implements OnInit{
   _productService = inject(ProductsService);
   products: Product[] = [];
   _cartService = inject(CartService)
-  
-  
+
+
   constructor() {}
 
   ngOnInit() {
@@ -60,7 +60,7 @@ export class HomePage implements OnInit{
     // User is signed out
     // ...
   }
-    
+
 });
   }
 
@@ -78,17 +78,17 @@ const db = getFirestore();
         if (doc.data()['role']['admin'] === true) {
           this.isAdmin = true;
         }
-    
+
         else if (doc.data()['role']['final'] == true){
           this.isFinalUser = true;
         }
-    
+
         else{
           this.isAdmin = false;
           this.isFinalUser = false;
         }
-        
-        
+
+
     });
     })
     .catch((error) => {

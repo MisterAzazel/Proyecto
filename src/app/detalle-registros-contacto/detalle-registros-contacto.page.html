@@ -1,24 +1,24 @@
-<ion-content>
+<ion-content >
   <ion-menu contentId="main-content" class="menu-main-content">
     <ion-header>
       <ion-toolbar color="tertiary">
         <ion-title>Menu Content</ion-title>
       </ion-toolbar>
       <ion-list>
-        <ion-item href="/"><ion-icon name="chatbubble-outline"></ion-icon> Inicio</ion-item>
-        <ion-item href="/contacto"><ion-icon name="chatbox-ellipses-outline"></ion-icon> Contacto</ion-item>
-        <ion-item href="/nosotros"><ion-icon name="construct-outline"></ion-icon> Nosotros</ion-item>
-        <ion-item href="/noticias"><ion-icon name="construct-outline"></ion-icon> Noticias</ion-item>
-        <ion-item href="/panaderia"><ion-icon name="business-outline"></ion-icon> Panaderia</ion-item>
-        <ion-item href="/pasteleria"><ion-icon name="business-outline"></ion-icon> Pasteleria</ion-item>
-        <ion-item href="/blog"><ion-icon name="business-outline"></ion-icon> Blog</ion-item>
-        <ion-item href="/login" *ngIf="isLoggedIn == false"><ion-icon name="person-sharp"></ion-icon>Iniciar Sesión</ion-item>
-        <ion-item href="/" *ngIf="isLoggedIn == true" (click)="logOut()"><ion-icon name="person-sharp"></ion-icon>Cerrar Sesión</ion-item>
-        <ion-item href="/carrito" ><ion-icon name="cart"></ion-icon>Carrito</ion-item>
-        <ion-item href="/administracion" *ngIf="isAdmin == true || isFinalUser == true"><ion-icon name="person-sharp"></ion-icon>Administración</ion-item>
+        <ion-item href="/">Inicio</ion-item>
+        <ion-item href="/contacto" *ngIf="isAdmin == false && isFinalUser == false">Contacto</ion-item>
+        <ion-item href="/nosotros">Nosotros</ion-item>
+        <ion-item href="/noticias">Noticias</ion-item>
+        <ion-item href="/panaderia">Panaderia</ion-item>
+        <ion-item href="/pasteleria">Pasteleria</ion-item>
+        <ion-item href="/blog">Blog</ion-item>
+        <ion-item href="/login" *ngIf="isLoggedIn == false">Iniciar Sesión</ion-item>
+        <ion-item href="/" *ngIf="isLoggedIn == true" (click)="logOut()">Cerrar Sesión</ion-item>
+        <ion-item href="/carrito">Carrito</ion-item>
+        <ion-item href="/boleta"  *ngIf="isLoggedIn == true && isAdmin == false && isFinalUser == false">Compras</ion-item>
+        <ion-item href="/administracion" *ngIf="isAdmin == true || isFinalUser == true">Administración</ion-item>
       </ion-list>
     </ion-header>
-    <ion-content class="ion-padding">This is the menu content.</ion-content>
   </ion-menu>
   <div class="ion-page" id="main-content">
     <ion-header>
@@ -28,13 +28,13 @@
         </ion-buttons>
           <ion-row class="header ion-align-items-center">
             <ion-col size="1">
-              <img src="https://cdn.moriyashrine.org/monthly_2019_12/magnificent.thumb.jpeg.ca7c07940a465c57296f6aa13fbfb9cc.jpeg" width="50px">
+              <img src="assets/img/logo.jpg" width="50px">
             </ion-col>
             <ion-col size="10" class="ion-text-left">
               <ion-button fill="clear"  href="/">
               Inicio
               </ion-button>
-              <ion-button fill="clear"  href="/contacto">
+              <ion-button fill="clear" *ngIf="isAdmin == false && isFinalUser == false" href="/contacto">
               Contacto
               </ion-button>
               <ion-button fill="clear"  href="/nosotros">
@@ -50,7 +50,10 @@
               Pasteleria
               </ion-button>
               <ion-button fill="clear" href="/blog">
-                Blog
+              Blog
+              </ion-button>
+              <ion-button fill="clear" href="/boleta" *ngIf="isLoggedIn == true && isAdmin == false && isFinalUser == false">
+              Boleta
               </ion-button>
               <ion-button fill="clear" *ngIf="isLoggedIn == false" href="/login">
               Iniciar sesión
@@ -80,6 +83,12 @@
   <br>
   <br>
 
+  <div class="centrar">
+    <ion-button href="/lista-registros-contacto">Volver</ion-button>
+  </div>
+
+  <br>
+
   <ion-content>
 
     <ion-title class="ion-text-center">Datos de la consulta</ion-title>
@@ -92,8 +101,28 @@
             <p>Email: {{ formContact.get('email')?.value }}</p>
             <p>Telefono: {{ formContact.get('phone')?.value }}</p>
             <p>Mensaje: {{ formContact.get('message')?.value }}</p>
+            <p *ngIf="formContact.get('state').value == false">Estado de la consulta: Pendiente</p>
+            <p *ngIf="formContact.get('state').value == true">Estado de la consulta: Respondido</p>
           </div>
         </ion-col>
       </ion-row>
     </ion-grid>
+    <br>
+    <ion-title class="centrar">Si deseas cambiar el estado de la consulta puedes hacerlo aqui abajo</ion-title>
+    <div class="register-form ion-padding">
+      <form [formGroup]="formContact">
+        <div class="form-input">
+          <ion-select aria-label="state" class="centrar" placeholder="Si ha respondido a la consulta cambie el estado de la consulta" formControlName="state">
+            <ion-select-option [value]="false">Pendiente</ion-select-option>
+            <ion-select-option [value]="true">Respondido</ion-select-option>
+          </ion-select>
+      </div>
+      <div class="ion-text-center ion-align-items-center">
+        <ion-button (click)="actualizarEstadoConsulta()">Cambiar Estado</ion-button>
+      </div>
+      </form>
+    </div>
+
+
+
   </ion-content>

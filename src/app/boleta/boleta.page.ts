@@ -6,6 +6,13 @@ import { UsersService } from '../services/users.service';
 import { Router } from '@angular/router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { addDoc, collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
+import { ComprasService } from '../services/compras.service';
+import { Compras, Productos } from '../commons/interfaces/user.interface';
+import { map } from 'rxjs';
+import axios from 'axios';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-boleta',
@@ -17,6 +24,7 @@ import { addDoc, collection, getDocs, getFirestore, query, where } from 'firebas
 export class BoletaPage implements OnInit {
 
   _userService = inject(UsersService);
+  _compras = inject(ComprasService);
   isAdmin = false;
   isLoggedIn = false;
   isFinalUser = false;
@@ -25,16 +33,25 @@ export class BoletaPage implements OnInit {
   nombre: string = '';
   apellido: string= '';
   objetos: any[] = [];
+  compras: Compras[] = [];
   total: number = 0;
 
   constructor() { }
 
   ngOnInit() {
-    this.GetAll();
-    this.calcularPrecioTotal();
     this.getCurrentUser();
-    this.generarPDF();
+    setTimeout(() => {
+      if(this.isFinalUser == true || this.isAdmin == true){
+        this.loadCompras();
+      }
+      else{
+        this.loadComprasCorreo(this.email);
+      }
+    }, 2000);
+
   }
+
+
 
   getCurrentUser() {
     const auth = getAuth();
@@ -55,60 +72,58 @@ export class BoletaPage implements OnInit {
     });
   }
 
-
-  GetAll() {
-    // Obtener todas las claves del sessionStorage
-  const keys = Object.keys(sessionStorage);
-
-  // Array para almacenar los objetos recuperados
-   this.objetos = [];
-
-  // Iterar sobre las claves y obtener los objetos correspondientes
-  for (const key of keys) {
-    const value = sessionStorage.getItem(key);
-
-  if (value !== null) {
-    const objeto = JSON.parse(value);
-    this.objetos.push(objeto);
-    console.log(this.objetos);
-    }
-  }
-}
-
-  calcularPrecioTotal() {
-    this.total = 0; // Reinicia el valor a cero
-
-    for (const arr of this.objetos) {
-      for (const objeto of arr) {
-        this.total += objeto.price * objeto.compra;
-      }
-    }
+  async reembolsarCompra(ordenCompra: string) {
+    const compras: Partial<Compras> = { orden_compra: ordenCompra, estado: 'Reembolsado' };
+    await this._compras.updateCompras(compras as Compras);
   }
 
-  generarPDF() {
-    this.generarBoletaPDF(this.nombre, this.apellido, this.objetos, this.total);
+
+  loadCompras() {
+    this._compras.getCompras().pipe(
+      map(res => res.filter(compra => !!compra)) // Filtra las compras nulas o indefinidas
+    ).subscribe(res => {
+      this.compras = res;
+      console.log(this.compras);
+    });
   }
 
-  generarBoletaPDF(nombre: string, apellido: string, objetos: any[], total: number) {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', '/boleta', true);
-    xhr.responseType = 'blob';
+  loadComprasCorreo(email: string){
+    this._compras.getCompras(email).pipe(
+      map(res => res.filter(compra => !!compra)) // Filtra las compras nulas o indefinidas
+    ).subscribe(res => {
+      this.compras = res;
+      console.log(this.compras);
+    });
+  }
 
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        const blob = new Blob([xhr.response], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'boleta.pdf';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      }
+  cancelarCompra(token: string, amount: number, orden_compra: string) {
+    if(confirm(`Seguro que quieres reembolsar esta compra?`)){
+      const url = `http://localhost:3000/rswebpaytransaction/api/webpay/v1.3/transactions/${token}`;
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Tbk-Api-Key-Id': '597055555532',
+      'Tbk-Api-Key-Secret': '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C'
     };
 
-    xhr.send();
-  }
+    const datosDeCancelacion = {
+      token: token,
+      amount: amount
+    };
 
+    axios.put(url, datosDeCancelacion, { headers: headers })
+    .then(response => {
+      console.log('Reembolso', response.data)
+      this.reembolsarCompra(orden_compra);
+      // Manejar la respuesta según tus necesidades
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      console.log('Error:', error.response?.data);
+      // Manejar el error según tus necesidades
+    });
+  }
+    }
 
 
 getUserDataByEmail(email: any) {
@@ -145,6 +160,95 @@ const db = getFirestore();
       console.error('Error al obtener los datos:', error);
     });
   }
+
+  generarPDF(orderNumber: string) {
+    // Obtener la fecha actual
+    const fechaActual = new Date().toLocaleDateString();
+
+    // Obtener el nombre y apellido del comprador
+    const nombreComprador = this.compras.find((compra: any) => compra.orden_compra === orderNumber)?.nombre_comprador;
+    const apellidoComprador = this.compras.find((compra: any) => compra.orden_compra === orderNumber)?.apellido_comprador;
+
+    // Obtener la lista de productos de la orden de compra
+    const productList = this.compras.find((compra: any) => compra.orden_compra === orderNumber)?.productos.map((producto: any) => [
+      { text: producto.nombre_producto, alignment: 'center' },
+      { text: producto.compra.toString(), alignment: 'center' },
+      { text: '$' + producto.price, alignment: 'center' },
+      { text: '$' + (producto.price * producto.compra), alignment: 'center' }
+    ]);
+
+    // Obtener el precio total de la orden de compra
+    const precioTotal = this.compras.find((compra: any) => compra.orden_compra === orderNumber)?.precio_total;
+
+    // Configuración del documento PDF
+    pdfMake.vfs = pdfFonts.pdfMake.vfs;
+    const docDefinition = {
+      content: [
+        // Título de la panadería
+        { text: 'Olivia Panadería y Pastelería Saludable', style: 'titulo' },
+
+        // Nombre del cliente
+        { text: 'Cliente: ' + nombreComprador + ' ' + apellidoComprador, style: 'clienteHeader' },
+
+        // Orden de compra y fecha actual
+        {
+          columns: [
+            { text: 'Orden de Compra: ' + orderNumber, style: 'ordenCompra' },
+            { text: 'Fecha: ' + fechaActual, style: 'fecha' }
+          ]
+        },
+
+        // Tabla de productos
+        {
+          style: 'tablaProductos',
+          table: {
+            headerRows: 1,
+            widths: ['auto', 'auto', 'auto', 'auto'],
+            body: [
+              // Encabezados de la tabla
+              ['Nombre del Producto', 'Cantidad', 'Precio Unitario', 'Precio Total'],
+
+              // Filas de productos
+              ...productList,
+
+              // Precio total
+              ['', '', '', { text: 'Total a Pagar: $' + precioTotal, alignment: 'center' }]
+            ]
+          }
+        }
+      ],
+      styles: {
+        titulo: {
+          fontSize: 24,
+          bold: true,
+          alignment: 'center',
+          margin: [0, 0, 0, 20] // Margen inferior de 20 unidades
+        },
+        clienteHeader: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 0, 0, 10] // Margen inferior de 10 unidades
+        },
+        ordenCompra: {
+          fontSize: 12,
+          bold: true
+        },
+        fecha: {
+          fontSize: 12,
+          margin: [10, 0, 0, 0] // Margen izquierdo de 10 unidades
+        },
+        tablaProductos: {
+          margin: [0, 10, 0, 20] // Margen inferior de 20 unidades
+        }
+      }
+    };
+
+    // Generar el PDF
+    const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+    pdfDocGenerator.download('boleta.pdf');
+  }
+
+
 
   logOut(){
     this._userService.logOut()

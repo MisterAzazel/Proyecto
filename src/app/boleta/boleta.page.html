@@ -1,25 +1,24 @@
-<ion-content>
+<ion-content >
   <ion-menu contentId="main-content" class="menu-main-content">
     <ion-header>
       <ion-toolbar color="tertiary">
         <ion-title>Menu Content</ion-title>
       </ion-toolbar>
       <ion-list>
-        <ion-item href="/"><ion-icon name="chatbubble-outline"></ion-icon> Inicio</ion-item>
-        <ion-item href="/lista-registros-contacto" *ngIf="isAdmin == true || isFinalUser == true"><ion-icon name="chatbox-ellipses-outline"></ion-icon> Contacto</ion-item>
-        <ion-item href="/contacto" *ngIf="isAdmin == false && isFinalUser == false"><ion-icon name="chatbox-ellipses-outline"></ion-icon> Contacto</ion-item>
-        <ion-item href="/nosotros"><ion-icon name="construct-outline"></ion-icon> Nosotros</ion-item>
-        <ion-item href="/noticias"><ion-icon name="construct-outline"></ion-icon> Noticias</ion-item>
-        <ion-item href="/panaderia"><ion-icon name="business-outline"></ion-icon> Panaderia</ion-item>
-        <ion-item href="/pasteleria"><ion-icon name="business-outline"></ion-icon> Pasteleria</ion-item>
-        <ion-item href="/blog"><ion-icon name="business-outline"></ion-icon> Blog</ion-item>
-        <ion-item href="/login" *ngIf="isLoggedIn == false"><ion-icon name="person-sharp"></ion-icon>Iniciar Sesión</ion-item>
-        <ion-item href="/" *ngIf="isLoggedIn == true" (click)="logOut()"><ion-icon name="person-sharp"></ion-icon>Cerrar Sesión</ion-item>
-        <ion-item href="/carrito" ><ion-icon name="cart"></ion-icon>Carrito</ion-item>
-        <ion-item href="/administracion" *ngIf="isAdmin == true || isFinalUser == true"><ion-icon name="person-sharp"></ion-icon>Administración</ion-item>
+        <ion-item href="/">Inicio</ion-item>
+        <ion-item href="/contacto" *ngIf="isAdmin == false && isFinalUser == false">Contacto</ion-item>
+        <ion-item href="/nosotros">Nosotros</ion-item>
+        <ion-item href="/noticias">Noticias</ion-item>
+        <ion-item href="/panaderia">Panaderia</ion-item>
+        <ion-item href="/pasteleria">Pasteleria</ion-item>
+        <ion-item href="/blog">Blog</ion-item>
+        <ion-item href="/login" *ngIf="isLoggedIn == false">Iniciar Sesión</ion-item>
+        <ion-item href="/" *ngIf="isLoggedIn == true" (click)="logOut()">Cerrar Sesión</ion-item>
+        <ion-item href="/carrito">Carrito</ion-item>
+        <ion-item href="/boleta"  *ngIf="isLoggedIn == true && isAdmin == false && isFinalUser == false">Compras</ion-item>
+        <ion-item href="/administracion" *ngIf="isAdmin == true || isFinalUser == true">Administración</ion-item>
       </ion-list>
     </ion-header>
-    <ion-content class="ion-padding">This is the menu content.</ion-content>
   </ion-menu>
   <div class="ion-page" id="main-content">
     <ion-header>
@@ -34,9 +33,6 @@
             <ion-col size="10" class="ion-text-left">
               <ion-button fill="clear"  href="/">
               Inicio
-              </ion-button>
-              <ion-button fill="clear" *ngIf="isAdmin == true || isFinalUser == true"  href="/lista-registros-contacto">
-              Contacto
               </ion-button>
               <ion-button fill="clear" *ngIf="isAdmin == false && isFinalUser == false" href="/contacto">
               Contacto
@@ -54,7 +50,10 @@
               Pasteleria
               </ion-button>
               <ion-button fill="clear" href="/blog">
-                Blog
+              Blog
+              </ion-button>
+              <ion-button fill="clear" href="/boleta" *ngIf="isLoggedIn == true && isAdmin == false && isFinalUser == false">
+              Boleta
               </ion-button>
               <ion-button fill="clear" *ngIf="isLoggedIn == false" href="/login">
               Iniciar sesión
@@ -81,20 +80,34 @@
   <br>
   <br>
   <br>
+
+  <div *ngIf="isAdmin == true || isFinalUser == true" class="centrar">
+    <ion-button href="/administracion">Volver</ion-button>
+  </div>
+
   <br>
 
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Boleta de Compra</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-title class="ion-text-center">Compras realizadas</ion-title>
+  <br>
+  <p>Tus compras pueden tardar un poco en cargar, sea paciente (tiempo estimado 5 segundos si no carga nada comunicar problema en seccion "Contacto")</p>
 
-  <ion-content class="pdf-content">
-    <p>Cliente: {{ nombre + ' ' + apellido }}</p>
-    <p>Productos:</p>
-    <ul *ngFor="let arr of objetos">
-      <li *ngFor="let objeto of arr">{{ objeto.nombre_producto }} - ${{ objeto.price }}</li>
-    </ul>
-    <p>Total a Pagar: ${{ total }}</p>
-    <ion-button (click)="generarPDF()">Obtener Boleta</ion-button>
-  </ion-content>
+    <div class="compra-card" *ngFor="let compra of compras">
+      <h2>Orden de compra: {{ compra.orden_compra }}</h2>
+      <p>Token: {{ compra.token }}</p>
+      <p>Email del comprador: {{ compra.email_comprador }}</p>
+      <p>Nombre del comprador: {{ compra.nombre_comprador + ' ' + compra.apellido_comprador }}</p>
+      <p>Precio total: {{ compra.precio_total }}</p>
+      <p>Fecha: {{ compra.fecha }}</p>
+      <p>Estado: {{ compra.estado }}</p>
+      <h3>Productos:</h3>
+      <div class="producto-card" *ngFor="let producto of compra.productos">
+        <p>Nombre: {{ producto.nombre_producto }}</p>
+        <p>Precio: {{ producto.price }}</p>
+        <p>Cantidad: {{ producto.compra }}</p>
+      </div>
+      <div class="ion-text-center ion-align-items-center">
+        <ion-button (click)="generarPDF(compra.orden_compra)">Boleta</ion-button>
+        <ion-button color="danger" (click)="cancelarCompra(compra.token, compra.precio_total, compra.orden_compra)" *ngIf="isAdmin == true || isFinalUser == true" >Reembolsar compra</ion-button>
+      </div>
+    </div>
+

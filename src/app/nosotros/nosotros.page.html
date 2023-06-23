@@ -1,24 +1,24 @@
-<ion-content>
+<ion-content >
   <ion-menu contentId="main-content" class="menu-main-content">
     <ion-header>
       <ion-toolbar color="tertiary">
         <ion-title>Menu Content</ion-title>
       </ion-toolbar>
       <ion-list>
-        <ion-item href="/"><ion-icon name="chatbubble-outline"></ion-icon> Inicio</ion-item>
-        <ion-item href="/contacto"><ion-icon name="chatbox-ellipses-outline"></ion-icon> Contacto</ion-item>
-        <ion-item href="/nosotros"><ion-icon name="construct-outline"></ion-icon> Nosotros</ion-item>
-        <ion-item href="/noticias"><ion-icon name="construct-outline"></ion-icon> Noticias</ion-item>
-        <ion-item href="/panaderia"><ion-icon name="business-outline"></ion-icon> Panaderia</ion-item>
-        <ion-item href="/pasteleria"><ion-icon name="business-outline"></ion-icon> Pasteleria</ion-item>
-        <ion-item href="/blog"><ion-icon name="business-outline"></ion-icon> Blog</ion-item>
-        <ion-item href="/login" *ngIf="isLoggedIn == false"><ion-icon name="person-sharp"></ion-icon>Iniciar Sesión</ion-item>
-        <ion-item href="/" *ngIf="isLoggedIn == true" (click)="logOut()"><ion-icon name="person-sharp"></ion-icon>Cerrar Sesión</ion-item>
-        <ion-item href="/carrito" ><ion-icon name="cart"></ion-icon>Carrito</ion-item>
-        <ion-item href="/administracion" *ngIf="isAdmin == true || isFinalUser == true"><ion-icon name="person-sharp"></ion-icon>Administración</ion-item>
+        <ion-item href="/">Inicio</ion-item>
+        <ion-item href="/contacto" *ngIf="isAdmin == false && isFinalUser == false">Contacto</ion-item>
+        <ion-item href="/nosotros">Nosotros</ion-item>
+        <ion-item href="/noticias">Noticias</ion-item>
+        <ion-item href="/panaderia">Panaderia</ion-item>
+        <ion-item href="/pasteleria">Pasteleria</ion-item>
+        <ion-item href="/blog">Blog</ion-item>
+        <ion-item href="/login" *ngIf="isLoggedIn == false">Iniciar Sesión</ion-item>
+        <ion-item href="/" *ngIf="isLoggedIn == true" (click)="logOut()">Cerrar Sesión</ion-item>
+        <ion-item href="/carrito">Carrito</ion-item>
+        <ion-item href="/boleta"  *ngIf="isLoggedIn == true && isAdmin == false && isFinalUser == false">Compras</ion-item>
+        <ion-item href="/administracion" *ngIf="isAdmin == true || isFinalUser == true">Administración</ion-item>
       </ion-list>
     </ion-header>
-    <ion-content class="ion-padding">This is the menu content.</ion-content>
   </ion-menu>
   <div class="ion-page" id="main-content">
     <ion-header>
@@ -34,7 +34,7 @@
               <ion-button fill="clear"  href="/">
               Inicio
               </ion-button>
-              <ion-button fill="clear"  href="/contacto">
+              <ion-button fill="clear" *ngIf="isAdmin == false && isFinalUser == false" href="/contacto">
               Contacto
               </ion-button>
               <ion-button fill="clear"  href="/nosotros">
@@ -50,7 +50,10 @@
               Pasteleria
               </ion-button>
               <ion-button fill="clear" href="/blog">
-                Blog
+              Blog
+              </ion-button>
+              <ion-button fill="clear" href="/boleta" *ngIf="isLoggedIn == true && isAdmin == false && isFinalUser == false">
+              Boleta
               </ion-button>
               <ion-button fill="clear" *ngIf="isLoggedIn == false" href="/login">
               Iniciar sesión
@@ -79,16 +82,11 @@
 
 
 
-  <header>
-    <img src="assets/img/logo.jpg" alt="">
-    <h1>Olivia panaderia y pasteleria saludable</h1>
-  </header>
-
   <main>
 
     <!--Acerca de-->
     <h2>Acerca de Olivia panaderia y pasteleria saludable</h2>
-    <p>Olivias Panadería &Pastelería Saludable es un emprendimiento familiar que se dedica a elaborar
+    <p>Olivias Panadería & Pastelería Saludable es un emprendimiento familiar que se dedica a elaborar
       productos saludables de panadería y pastelería creando productos para distintas alergias
       alimentarias principalmente para diabéticos y celiacos.
       El objetivo de este emprendimiento es entregar un producto que cubra las distintas problemáticas
@@ -101,15 +99,9 @@
     <img src="assets/img/logo.jpg" alt="">
     <p class="caption"></p>
 
-    <!--Caracteristicas-->
-    <h2>Acerca de nuestro productos</h2>
-    <p>(ingresar informacion de los productos)</p>
-    <!--Amigos-->
-    <h2>Horario</h2>
-    <p>(ingresar horario)</p>
   </main>
 
   <footer>
-    <p>(Espacio para iconos redes sociales y demás cosas)</p>
+    <p></p>
   </footer>
 </ion-content>

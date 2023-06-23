@@ -40,7 +40,7 @@ export class CrudNoticiasPage implements OnInit {
   });
 
   addNews(){
-    this._newsService.addNews({  
+    this._newsService.addNews({
       id: new Date().getTime().toString(),
       ...this.formNews.getRawValue(),
     } as News);
@@ -59,12 +59,12 @@ export class CrudNoticiasPage implements OnInit {
   }
 
   deleteNews(news: News) {
-    if (confirm(`Seguro de borrar a ${news.id}`)) {
+    if (confirm(`Seguro de borrar a ${news.title}`)) {
       this._newsService.deleteNews(news.id);
     }
   }
 
- 
+
   getCurrentUser(){
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
@@ -82,7 +82,7 @@ export class CrudNoticiasPage implements OnInit {
     // User is signed out
     // ...
   }
-    
+
 });
   }
 
@@ -96,21 +96,21 @@ const db = getFirestore();
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         console.log('ID:', doc.id); // ID del documento
-        console.log('Data:', doc.data()); // Todos los datos del documento  
+        console.log('Data:', doc.data()); // Todos los datos del documento
         if (doc.data()['role']['admin'] === true) {
           this.isAdmin = true;
         }
-    
+
         else if (doc.data()['role']['final'] == true){
           this.isFinalUser = true;
         }
-    
+
         else{
           this.isAdmin = false;
           this.isFinalUser = false;
         }
-        
-        
+
+
     });
     })
     .catch((error) => {
@@ -125,5 +125,5 @@ const db = getFirestore();
     })
     .catch(error => console.log(error));
   }
-  
+
 }
