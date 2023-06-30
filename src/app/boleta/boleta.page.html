@@ -53,7 +53,7 @@
               Blog
               </ion-button>
               <ion-button fill="clear" href="/boleta" *ngIf="isLoggedIn == true && isAdmin == false && isFinalUser == false">
-              Boleta
+              Compras
               </ion-button>
               <ion-button fill="clear" *ngIf="isLoggedIn == false" href="/login">
               Iniciar sesión
@@ -93,7 +93,7 @@
 
     <div class="compra-card" *ngFor="let compra of compras">
       <h2>Orden de compra: {{ compra.orden_compra }}</h2>
-      <p>Token: {{ compra.token }}</p>
+      <p *ngIf="isAdmin == true || isFinalUser == true" >Token: {{ compra.token }}</p>
       <p>Email del comprador: {{ compra.email_comprador }}</p>
       <p>Nombre del comprador: {{ compra.nombre_comprador + ' ' + compra.apellido_comprador }}</p>
       <p>Precio total: {{ compra.precio_total }}</p>

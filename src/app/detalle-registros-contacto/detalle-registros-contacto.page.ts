@@ -29,9 +29,9 @@ export class DetalleRegistrosContactoPage implements OnInit {
   _router = inject(Router)
   _location = inject(Location);
   registroContacto!: registroContacto;
-  private fromEmail = 'your-email@example.com';
+  /*private fromEmail = 'your-email@example.com';
   private sendGridUrl = 'https://api.sendgrid.com/v3/mail/send';
-  private apiKey = environment.sendgridApiKey;
+  private apiKey = environment.sendgridApiKey;*/
 
 
 
