@@ -288,13 +288,9 @@ createAndSubmitForm(url: string, token: string) {
 
 
 realizarSolicitud() {
-
   if (this.isLoggedIn == false) {
-    alert('Tienes que iniciar sesión para proceder al pago')
-  }
-
-
-  else{
+    alert('Tienes que iniciar sesión para proceder al pago');
+  } else {
     const url = 'http://localhost:3000/rswebpaytransaction/api/webpay/v1.3/transactions';
     const orderNumber = Math.floor(10000000 + Math.random() * 90000000);
 
@@ -304,11 +300,18 @@ realizarSolicitud() {
       'Tbk-Api-Key-Secret': '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C'
     };
 
+    const hostName = window.location.hostname;
+    let returnUrl = '/carrito'; // Valor predeterminado para localhost
+
+    if (hostName === 'proyecto-duoc.web.app') {
+      returnUrl = 'https://proyecto-duoc.web.app/carrito';
+    }
+
     const datosDeCompra = {
       "buy_order": orderNumber,
       "session_id": "sesion1234557545",
       "amount": this.precio_total,
-      "return_url": "http://localhost:4200/carrito",
+      "return_url": returnUrl,
     };
 
     axios.post(url, datosDeCompra, { headers: headers })
@@ -326,7 +329,6 @@ realizarSolicitud() {
         console.log("Error:", error.response?.data);
       });
   }
-
 }
 
 confirmarTransaccion(token: string, orderNumber: string) {

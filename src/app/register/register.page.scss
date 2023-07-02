@@ -2,44 +2,45 @@
     background-color: black;
     outline: white;
   }
-  
+
   @media(min-width: 1024px){
     .menu-button{
       display: none;
     }
-  
+
     .menu-main-content{
       display: none;
     }
-  
-   
-    
+
+
+
   }
-  
+
   @media(max-width:1023px){
     .header{
       display: none;
     }
-  
+
   }
-  
+
 
 ion-content {
     --background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1))
 }
 
 .register-section{
-    height: 88vh;
+    height: 110vh;
     width: 100%;
     max-width: 500px;
     background: #fff;
     right: 0;
     left: 0;
     bottom: 0;
-    position: fixed;
     margin: auto;
     border-top-left-radius: 46px;
     border-top-right-radius: 46px;
+    border-bottom-left-radius: 46px;
+    border-bottom-right-radius: 46px;
 }
 
 .heading{
@@ -74,7 +75,7 @@ ion-content {
         }
 
         ion-label{
-            position: absolute;
+
             margin-left: 35px;
             font-weight: bolder;
             font-size: 0.8rem;
@@ -89,10 +90,10 @@ ion-content {
         }
     }
 }
-    
+
 .action-buttons{
     text-align: center;
- 
+
     .register{
         --background: #f9b801;
         --border-color: #b4b4b4;
