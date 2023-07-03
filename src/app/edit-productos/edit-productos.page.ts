@@ -31,9 +31,9 @@ export class EditProductosPage implements OnInit {
 
 
   formEditProduct = new FormGroup({
-    category: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+'), Validators.minLength(2)]),
-    description: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+'), Validators.minLength(10)]),
-    name: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+')]),
+    category: new FormControl('', [Validators.required,Validators.pattern('[\\w\\sáéíóúÁÉÍÓÚüÜñÑ,%().-]*'), Validators.minLength(2)]),
+    description: new FormControl('', [Validators.required,Validators.pattern('[\\w\\sáéíóúÁÉÍÓÚüÜñÑ,%().-]*'), Validators.minLength(10)]),
+    name: new FormControl('', [Validators.required,Validators.pattern('[\\w\\sáéíóúÁÉÍÓÚüÜñÑ,%().-]*'), Validators.minLength(3)]),
     img: new FormControl('', [Validators.required]),
     price: new FormControl(1, [Validators.required,Validators.pattern('[0-9]*'), Validators.minLength(1)]),
     stock: new FormControl(2, [Validators.required,Validators.pattern('[0-9]*'), Validators.minLength(1)]),
@@ -152,7 +152,7 @@ const db = getFirestore();
   logOut(){
     this._userService.logOut()
     .then(() => {
-      this._router.navigate(['reload']);
+      this._router.navigate(['/']);
     })
     .catch(error => console.log(error));
   }

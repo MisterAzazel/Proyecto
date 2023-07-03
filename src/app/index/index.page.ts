@@ -99,7 +99,7 @@ const db = getFirestore();
   logOut(){
     this._userService.logOut()
     .then(() => {
-      this._router.navigate(['reload']);
+      this._router.navigate(['/']);
     })
     .catch(error => console.log(error));
   }

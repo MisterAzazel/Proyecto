@@ -27,7 +27,7 @@ export class LoginPage implements OnInit {
 
   constructor() {
     this.formLogin = new FormGroup({
-      email: new FormControl('', [Validators.required,Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'), Validators.minLength(10)]),
+      email: new FormControl('', [Validators.required,Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'), Validators.minLength(10)]),
       password: new FormControl('', [Validators.required, Validators.minLength(8)]),
     })
    }
@@ -101,7 +101,7 @@ const db = getFirestore();
   logOut(){
     this._userService.logOut()
     .then(() => {
-      this._router.navigate(['reload']);
+      this._router.navigate(['/']);
     })
     .catch(error => console.log(error));
   }

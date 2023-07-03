@@ -1,16 +1,16 @@
 <ion-content >
   <ion-menu contentId="main-content" class="menu-main-content">
     <ion-header>
-      <ion-toolbar color="tertiary">
-        <ion-title>Menu Content</ion-title>
+      <ion-toolbar>
+        <ion-title>Menu</ion-title>
       </ion-toolbar>
       <ion-list>
         <ion-item href="/">Inicio</ion-item>
         <ion-item href="/contacto" *ngIf="isAdmin == false && isFinalUser == false">Contacto</ion-item>
         <ion-item href="/nosotros">Nosotros</ion-item>
         <ion-item href="/noticias">Noticias</ion-item>
-        <ion-item href="/panaderia">Panaderia</ion-item>
-        <ion-item href="/pasteleria">Pasteleria</ion-item>
+        <ion-item href="/panaderia">Panadería</ion-item>
+        <ion-item href="/pasteleria">Pastelería</ion-item>
         <ion-item href="/blog">Blog</ion-item>
         <ion-item href="/login" *ngIf="isLoggedIn == false">Iniciar Sesión</ion-item>
         <ion-item href="/" *ngIf="isLoggedIn == true" (click)="logOut()">Cerrar Sesión</ion-item>
@@ -44,16 +44,16 @@
               Noticias
               </ion-button>
               <ion-button fill="clear" href="/panaderia">
-              Panaderia
+              Panadería
               </ion-button>
               <ion-button fill="clear" href="/pasteleria">
-              Pasteleria
+              Pastelería
               </ion-button>
               <ion-button fill="clear" href="/blog">
               Blog
               </ion-button>
               <ion-button fill="clear" href="/boleta" *ngIf="isLoggedIn == true && isAdmin == false && isFinalUser == false">
-                Compras
+              Compras
               </ion-button>
               <ion-button fill="clear" *ngIf="isLoggedIn == false" href="/login">
               Iniciar sesión
@@ -62,7 +62,7 @@
               Cerrar sesión
               </ion-button>
               <ion-button fill="clear" *ngIf="isAdmin == true || isFinalUser == true"  href="/administracion">
-              Administracion
+              Administración
               </ion-button>
             </ion-col>
             <ion-col size="1" class="cart">
@@ -86,16 +86,19 @@
 
     <!--Acerca de-->
     <h2>Acerca de Olivia panaderia y pasteleria saludable</h2>
-    <p>Olivias Panadería & Pastelería Saludable es un emprendimiento familiar que se dedica a elaborar
-      productos saludables de panadería y pastelería creando productos para distintas alergias
-      alimentarias principalmente para diabéticos y celiacos.
-      El objetivo de este emprendimiento es entregar un producto que cubra las distintas problemáticas
-      de salud utilizando materias primas de calidad a través de la compra de insumos locales.
-      Por otra parte lo que busca este proyecto es desarrollar productos personalizados para cada
-      dolencia de salud donde la dueña del negocio cuenta con experiencia de varios años a nivel
-      internacional y nacional y con una maestría e celiaquía que le asegura entregar productos de buena
-      calidad de acuerdo a las necesidades de sus clientes.
+    <p class="nosotros">Olivias Panadería y Pastelería, Es un emprendimiento familiar que se
+      dedica a elaborar productos saludables de panadería y pastelería creando
+      productos para distintas alergias alimentarias principalmente para diabéticos
+      y celiacos. El objetivo de este emprendimiento es entregar productos que cubra
+      las distintas problemáticas de salud utilizando materias primas de alta  calidad
+      a través de la compra de insumos locales. Por otra parte, lo que busca este
+      proyecto es desarrollar productos personalizados para cada dolencia de salud,
+      la dueña del local cuenta con experiencias de varios años a nivel nacional e
+      internacional, con una maestría en repostería asegurándole la entrega de
+      productos de alta calidad de acuerdo a las necesidades de sus clientes.
     </p>
+    <h2>Ubicación</h2>
+    <p class="nosotros">Nos ubicamos en Barros Arana 685, 8050000 San Bernardo, Región Metropolitana</p>
     <img src="assets/img/logo.jpg" alt="">
     <p class="caption"></p>
 

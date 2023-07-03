@@ -50,11 +50,10 @@ export class CarritoPage implements OnInit {
     const transactionToken = localStorage.getItem('transactionToken');
     const orderNumber = localStorage.getItem('orderNumber');
     if (transactionToken) {
-    alert("Tu boleta se descargara automaticamente (tiempo estimado 5 segundos), si no se descarga o sucede algun otro problema, vaya a la seccion 'boleta'  ")
+    alert("Esperando datos de la transacción, espere por favor")
     setTimeout(() => {
         this.confirmarTransaccion(transactionToken, orderNumber);
-        this.verificarEstadoTransaccion(transactionToken, orderNumber);
-        localStorage.removeItem('transactionToken'); // Opcional: remover el token después de su uso
+        localStorage.removeItem('transactionToken');
         localStorage.removeItem('orderNumber');
     }, 2000);
     }
@@ -303,6 +302,10 @@ realizarSolicitud() {
     const hostName = window.location.hostname;
     let returnUrl = '/carrito'; // Valor predeterminado para localhost
 
+    if (hostName === 'localhost') {
+      returnUrl = 'http://localhost:4200/carrito';
+    }
+
     if (hostName === 'proyecto-duoc.web.app') {
       returnUrl = 'https://proyecto-duoc.web.app/carrito';
     }
@@ -345,39 +348,19 @@ confirmarTransaccion(token: string, orderNumber: string) {
         console.log('Respuesta de confirmación:', response.data);
         const status = response.data.status;
         if (status === 'AUTHORIZED') {
+          alert('Su transacción ha sido autorizada, su boleta se descargara automaticamente, si esta no se descarga automaticamente vaya a la sección "compras", si no esta ahi su compra comuniquese en "contacto"')
           this.generarPDF(orderNumber);
           this.guardarDatosEnFirebase(token, orderNumber);
         } else {
+
+         alert("Su transacción no ha sido autorizada o ha sido cancelada")
           console.log('La transacción no fue autorizada.');
         }
       })
       .catch(error => {
+
+        alert("Su transacción no ha sido autorizada o ha sido cancelada")
         console.error('Error al confirmar la transacción:', error);
-      });
-  }
-
-  verificarEstadoTransaccion(token: string, orderNumber: string) {
-    const url = `http://localhost:3000/rswebpaytransaction/api/webpay/v1.3/transactions/${token}`;
-
-    const headers = {
-      'Content-Type': 'application/json',
-      'Tbk-Api-Key-Id': '597055555532',
-      'Tbk-Api-Key-Secret': '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C'
-    };
-
-    axios.get(url, { headers: headers })
-      .then(response => {
-        console.log('Estado de la transacción:', response.data);
-        const status = response.data.status;
-        if (status === 'AUTHORIZED') {
-          this.generarPDF(orderNumber);
-          this.guardarDatosEnFirebase(token, orderNumber);
-        } else {
-          console.log('La transacción no fue autorizada.');
-        }
-      })
-      .catch(error => {
-        console.error('Error al verificar el estado de la transacción:', error);
       });
   }
 
@@ -386,7 +369,7 @@ confirmarTransaccion(token: string, orderNumber: string) {
   logOut(){
     this._userService.logOut()
     .then(() => {
-      this._router.navigate(['reload']);
+      this._router.navigate(['/']);
     })
     .catch(error => console.log(error));
   }

@@ -1,16 +1,16 @@
 <ion-content >
   <ion-menu contentId="main-content" class="menu-main-content">
     <ion-header>
-      <ion-toolbar color="tertiary">
-        <ion-title>Menu Content</ion-title>
+      <ion-toolbar>
+        <ion-title>Menu</ion-title>
       </ion-toolbar>
       <ion-list>
         <ion-item href="/">Inicio</ion-item>
         <ion-item href="/contacto" *ngIf="isAdmin == false && isFinalUser == false">Contacto</ion-item>
         <ion-item href="/nosotros">Nosotros</ion-item>
         <ion-item href="/noticias">Noticias</ion-item>
-        <ion-item href="/panaderia">Panaderia</ion-item>
-        <ion-item href="/pasteleria">Pasteleria</ion-item>
+        <ion-item href="/panaderia">Panadería</ion-item>
+        <ion-item href="/pasteleria">Pastelería</ion-item>
         <ion-item href="/blog">Blog</ion-item>
         <ion-item href="/login" *ngIf="isLoggedIn == false">Iniciar Sesión</ion-item>
         <ion-item href="/" *ngIf="isLoggedIn == true" (click)="logOut()">Cerrar Sesión</ion-item>
@@ -44,10 +44,10 @@
               Noticias
               </ion-button>
               <ion-button fill="clear" href="/panaderia">
-              Panaderia
+              Panadería
               </ion-button>
               <ion-button fill="clear" href="/pasteleria">
-              Pasteleria
+              Pastelería
               </ion-button>
               <ion-button fill="clear" href="/blog">
               Blog
@@ -62,7 +62,7 @@
               Cerrar sesión
               </ion-button>
               <ion-button fill="clear" *ngIf="isAdmin == true || isFinalUser == true"  href="/administracion">
-              Administracion
+              Administración
               </ion-button>
             </ion-col>
             <ion-col size="1" class="cart">
@@ -76,7 +76,6 @@
   </div>
 
 
-
   <br>
   <br>
   <br>
@@ -88,15 +87,21 @@
 
   <div class="register-section ion-padding">
     <div class="heading ion-padding">
-      <h1>Ingrese los datos del producto</h1>
+      <ion-title>Modifique los datos deseados</ion-title>
     </div>
     <div class="register-form ion-padding">
       <form [formGroup]="formEditProduct">
         <div class="form-input">
           <ion-select aria-label="Categoria" placeholder="Selecciona la categoria a la que pertenece este producto" formControlName="category">
-            <ion-select-option value="panaderia">Panaderia</ion-select-option>
-            <ion-select-option value="pasteleria">Pasteleria</ion-select-option>
+            <ion-select-option value="panaderia">Panadería</ion-select-option>
+            <ion-select-option value="pasteleria">Pastelería</ion-select-option>
           </ion-select>
+        </div>
+        <div class="form-input">
+          <ion-item>
+            <ion-label position="floating">Nombre</ion-label>
+            <ion-input aria-label="name" type="text" clearOnEdit="false" class="form-control" formControlName="name"></ion-input>
+          </ion-item>
         </div>
         <div class="form-input">
           <ion-item>
@@ -108,12 +113,6 @@
         <div class="form-input">
           <ion-item>
             <input type="file" id="imageInput" (change)="onFileSelected($event)" accept="image/*">
-          </ion-item>
-        </div>
-        <div class="form-input">
-          <ion-item>
-            <ion-label position="floating">Nombre</ion-label>
-            <ion-input aria-label="name" type="text" clearOnEdit="false" class="form-control" formControlName="name"></ion-input>
           </ion-item>
         </div>
         <div class="form-input">
@@ -136,5 +135,8 @@
         </div>
       </form>
     </div>
-    <ion-button [disabled]="formEditProduct.invalid" (click)="updateProducts()">Guardar</ion-button>
+    <div class="boton">
+      <ion-button [disabled]="formEditProduct.invalid" (click)="updateProducts()">Guardar</ion-button>
+    </div>
+
   </div>

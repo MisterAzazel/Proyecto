@@ -28,19 +28,23 @@ export class RegisterPage  {
 
   form = new FormGroup({
       name: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+'), Validators.minLength(2)]),
-      email: new FormControl('', [Validators.required,Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'), Validators.minLength(10)]),
+      email: new FormControl('', [Validators.required,Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'), Validators.minLength(10)]),
       password: new FormControl('', [Validators.required, Validators.minLength(8)]),
       lastName: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+')]),
     });
-  
-    
+
+
   register(){
     this._userService.register(this.form.value)
       .then(response =>{
         this.addUser(response.user.uid)
         console.log(response);
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        console.log(error);
+        alert('Este correo ya esta registrado en el sitio web, intente con otro correo');
+      })
+
   }
 
   addUser(userId = ''){
@@ -53,7 +57,10 @@ export class RegisterPage  {
         final: false,
       }
     } as User);
-    this._router.navigate(['login']);
+    setTimeout(() => {
+      this.logOut();
+    }, 1500);
+
   }
 
   getCurrentUser(){
@@ -73,7 +80,7 @@ export class RegisterPage  {
     // User is signed out
     // ...
   }
-    
+
 });
   }
 
@@ -87,21 +94,21 @@ const db = getFirestore();
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         console.log('ID:', doc.id); // ID del documento
-        console.log('Data:', doc.data()); // Todos los datos del documento  
+        console.log('Data:', doc.data()); // Todos los datos del documento
         if (doc.data()['role']['admin'] === true) {
           this.isAdmin = true;
         }
-    
+
         else if (doc.data()['role']['final'] == true){
           this.isFinalUser = true;
         }
-    
+
         else{
           this.isAdmin = false;
           this.isFinalUser = false;
         }
-        
-        
+
+
     });
     })
     .catch((error) => {
@@ -112,7 +119,7 @@ const db = getFirestore();
   logOut(){
     this._userService.logOut()
     .then(() => {
-      this._router.navigate(['reload']);
+      this._router.navigate(['/login']);
     })
     .catch(error => console.log(error));
   }

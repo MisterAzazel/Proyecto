@@ -1,5 +1,15 @@
+@font-face {
+    font-family: RobotoLight;
+    src: url("/assets/fonts/Roboto-Light.ttf"); //change url accordingly
+    }
+
+  *{
+    font-family: 'RobotoLight', 'sans-serif';
+  }
+
+
 .header{
-    background-color: black;
+    background-color: white;
     outline: white;
   }
 
@@ -23,10 +33,6 @@
 
   }
 
-
-ion-content {
-    --background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1))
-}
 
 
 
@@ -113,3 +119,7 @@ ion-content {
         width: 100%;
         }
     }
+
+ion-content{
+    --background: #ffc3a0;
+}

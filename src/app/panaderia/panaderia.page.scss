@@ -1,27 +1,36 @@
+@font-face {
+  font-family: RobotoLight;
+  src: url("/assets/fonts/Roboto-Light.ttf"); //change url accordingly
+  }
+
+*{
+  font-family: 'RobotoLight', 'sans-serif';
+}
+
 .header{
-    background-color: black;
+    background-color: white;
     outline: white;
   }
-  
+
   @media(min-width: 1200px){
     .menu-button{
       display: none;
     }
-  
+
     .menu-main-content{
       display: none;
     }
-  
-   
-    
+
+
+
   }
-  
+
   @media(max-width:1200px){
     .header{
       display: none;
     }
   }
-  
+
   .img-product{
     width: 200px;
     height: 200px;
@@ -40,7 +49,7 @@
     font-size: 20px;
     color: #0062cc;
     font-weight: bold;
-    
+
   }
 
   .desc, .stock{
@@ -49,9 +58,29 @@
     font-size: 20px;
   }
 
+  ion-content{
+    --background: #ffc3a0;
+  }
 
+  ion-title{
+    color: black;
+    font-size: 30px;
+    text-align: center;
+  }
 
+  .carta, .carta-item{
+    --background: #ffac75;
+    color: black;
+  }
 
+  .carta-boton{
+    color: black;
+  }
 
+  .form-control{
+    text-align: center;
+  }
 
-  
+  ion-input{
+    background: white;
+  }

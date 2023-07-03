@@ -24,7 +24,7 @@ export class PanaderiaPage implements OnInit {
   product$!: Observable<Product[]>;
 
   products: Product[] = [];
- 
+
 
   _productService = inject(ProductsService);
   _cartService = inject(CartService)
@@ -36,7 +36,7 @@ export class PanaderiaPage implements OnInit {
   compra: any = [];
   filtro: string = 'panaderia';
 
-  constructor() { 
+  constructor() {
     this.loadProducto(this.filtro);
     this.getCurrentUser();
   }
@@ -59,7 +59,7 @@ export class PanaderiaPage implements OnInit {
   getProduct(product: Product) {
     this._router.navigateByUrl('detalle-producto', { state: { product } });
   }
- 
+
 
   getCurrentUser(){
     const auth = getAuth();
@@ -78,7 +78,7 @@ export class PanaderiaPage implements OnInit {
     // User is signed out
     // ...
   }
-    
+
 });
   }
 
@@ -92,21 +92,21 @@ const db = getFirestore();
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         console.log('ID:', doc.id); // ID del documento
-        console.log('Data:', doc.data()); // Todos los datos del documento  
+        console.log('Data:', doc.data()); // Todos los datos del documento
         if (doc.data()['role']['admin'] === true) {
           this.isAdmin = true;
         }
-    
+
         else if (doc.data()['role']['final'] == true){
           this.isFinalUser = true;
         }
-    
+
         else{
           this.isAdmin = false;
           this.isFinalUser = false;
         }
-        
-        
+
+
     });
     })
     .catch((error) => {
@@ -117,7 +117,7 @@ const db = getFirestore();
   logOut(){
     this._userService.logOut()
     .then(() => {
-      this._router.navigate(['reload']);
+      this._router.navigate(['/']);
     })
     .catch(error => console.log(error));
   }

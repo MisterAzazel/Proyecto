@@ -1,5 +1,14 @@
+@font-face {
+  font-family: RobotoLight;
+  src: url("/assets/fonts/Roboto-Light.ttf"); //change url accordingly
+  }
+
+*{
+  font-family: 'RobotoLight', 'sans-serif';
+}
+
 .header{
-    background-color: black;
+    background-color: white;
     outline: white;
   }
 
@@ -25,13 +34,15 @@
 
 
   .compra-card {
-    border: 1px solid #ccc;
+    border: 1px solid black;
     padding: 10px;
     margin-bottom: 10px;
+    color: black;
+    background: #ffac75;
   }
 
   .producto-card {
-    border: 1px solid #ddd;
+    border: 1px solid black;
     padding: 5px;
     margin-bottom: 5px;
   }
@@ -41,4 +52,19 @@
     align-content: center;
     text-align: center;
     font-size: 24px;
+  }
+
+  ion-content{
+    --background: #ffc3a0;
+  }
+
+  ion-title{
+    color: black;
+    font-size: 24px;
+  }
+
+  .esperar{
+    color: black;
+    font-size: 16px;
+    text-align: center;
   }

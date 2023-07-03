@@ -1,16 +1,16 @@
 <ion-content >
   <ion-menu contentId="main-content" class="menu-main-content">
     <ion-header>
-      <ion-toolbar color="tertiary">
-        <ion-title>Menu Content</ion-title>
+      <ion-toolbar>
+        <ion-title>Menu</ion-title>
       </ion-toolbar>
       <ion-list>
         <ion-item href="/">Inicio</ion-item>
         <ion-item href="/contacto" *ngIf="isAdmin == false && isFinalUser == false">Contacto</ion-item>
         <ion-item href="/nosotros">Nosotros</ion-item>
         <ion-item href="/noticias">Noticias</ion-item>
-        <ion-item href="/panaderia">Panaderia</ion-item>
-        <ion-item href="/pasteleria">Pasteleria</ion-item>
+        <ion-item href="/panaderia">Panadería</ion-item>
+        <ion-item href="/pasteleria">Pastelería</ion-item>
         <ion-item href="/blog">Blog</ion-item>
         <ion-item href="/login" *ngIf="isLoggedIn == false">Iniciar Sesión</ion-item>
         <ion-item href="/" *ngIf="isLoggedIn == true" (click)="logOut()">Cerrar Sesión</ion-item>
@@ -44,16 +44,16 @@
               Noticias
               </ion-button>
               <ion-button fill="clear" href="/panaderia">
-              Panaderia
+              Panadería
               </ion-button>
               <ion-button fill="clear" href="/pasteleria">
-              Pasteleria
+              Pastelería
               </ion-button>
               <ion-button fill="clear" href="/blog">
-              Compras
+              Blog
               </ion-button>
               <ion-button fill="clear" href="/boleta" *ngIf="isLoggedIn == true && isAdmin == false && isFinalUser == false">
-              Boleta
+              Compras
               </ion-button>
               <ion-button fill="clear" *ngIf="isLoggedIn == false" href="/login">
               Iniciar sesión
@@ -62,7 +62,7 @@
               Cerrar sesión
               </ion-button>
               <ion-button fill="clear" *ngIf="isAdmin == true || isFinalUser == true"  href="/administracion">
-              Administracion
+              Administración
               </ion-button>
             </ion-col>
             <ion-col size="1" class="cart">
@@ -75,6 +75,7 @@
     </ion-header>
   </div>
 
+<div class="background">
 
   <br>
   <br>
@@ -83,16 +84,24 @@
   <br>
   <br>
 
+
+
+
+
+  <ion-title class="centrar">Blog redes sociales</ion-title>
+
+  <br>
+
+</div>
 <ion-content>
-  <ion-title>Blog redes sociales</ion-title>
-
   <div>
     <ngx-twitter-timeline class="twitter"
     [data]="{sourceType: 'url', url: 'https://twitter.com/PanaderiaOlivia'}"
-    [opts]="{tweetLimit: 5}">
+    [opts]="{tweetLimit: 4}">
   </ngx-twitter-timeline>
   </div>
 
-
-
 </ion-content>
+
+
+

@@ -1,93 +1,86 @@
+@font-face {
+  font-family: RobotoLight;
+  src: url("/assets/fonts/Roboto-Light.ttf"); //change url accordingly
+  }
+
+*{
+  font-family: 'RobotoLight', 'sans-serif';
+}
+
+
 .header{
-    background-color: black;
+    background-color: white;
     outline: white;
   }
-  
+
   @media(min-width: 1024px){
     .menu-button{
       display: none;
     }
-  
+
     .menu-main-content{
       display: none;
     }
-  
-   
-    
+
+
+
   }
-  
+
   @media(max-width:1023px){
     .header{
       display: none;
     }
-  
+
   }
 
-  header{
-    background-color: #e08e00;
-    text-align: center;
-    padding-top: 50px;
-    padding-bottom: 50px;
-  }
-  
-  header h1{
-    color: white;
-    font-size: 50px;
-  }
-  
+
+
   main{
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
   }
-  
+
+  .nosotros{
+    font-size: 22px;
+    color: black;
+  }
+
   main img{
     max-width: 100%;
   }
-  
+
   header img{
     border-radius: 170px;
     width: 300px;
     border: 20px solid white;
   }
-  
+
   h2{
     font-size: 30px;
     margin: 40px 0 10px;
+    color: black;
   }
-  
-  a{
-    color: #e70c19;
-  }
-  
-  a:hover{
-    color: white;
-    background-color: #483a94;
-  }
-  
+
   footer{
     background-color: #e08e00;
     text-align: center;
     color: white;
   }
-  
+
   footer a{
     color: white;
   }
-  
+
   footer p{
     margin: 0;
   }
-  
+
   footer a:hover{
     opacity: .5;
     background-color: transparent;
   }
-  
-  p.caption{
-    color:  #999999;
-    font-style: italic;
-    margin-top: 0;
-  }
 
-  
+  ion-content{
+    --background: #ffc3a0;
+  }

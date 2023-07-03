@@ -1,5 +1,14 @@
+@font-face {
+  font-family: RobotoLight;
+  src: url("/assets/fonts/Roboto-Light.ttf"); //change url accordingly
+  }
+
+*{
+  font-family: 'RobotoLight', 'sans-serif';
+}
+
 .header{
-    background-color: black;
+    background-color: white;
     outline: white;
   }
 
@@ -28,6 +37,8 @@
       border: 1px solid #ccc;
       padding: 10px;
       margin-bottom: 10px;
+      background-color: #ffac75;
+      color: black;
     }
 
     .table{
@@ -39,6 +50,8 @@
   .table {
     width: 100%;
     border-collapse: collapse;
+    background-color: #ffac75;
+    color: black;
   }
 
   .table th,
@@ -57,4 +70,13 @@
 
   .centrar{
     text-align: center;
+  }
+
+  ion-content{
+    --background: #ffc3a0;
+  }
+
+  ion-title{
+    color: black;
+    font-size: 24px;
   }

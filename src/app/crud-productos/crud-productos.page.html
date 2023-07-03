@@ -1,16 +1,16 @@
 <ion-content >
   <ion-menu contentId="main-content" class="menu-main-content">
     <ion-header>
-      <ion-toolbar color="tertiary">
-        <ion-title>Menu Content</ion-title>
+      <ion-toolbar>
+        <ion-title>Menu</ion-title>
       </ion-toolbar>
       <ion-list>
         <ion-item href="/">Inicio</ion-item>
         <ion-item href="/contacto" *ngIf="isAdmin == false && isFinalUser == false">Contacto</ion-item>
         <ion-item href="/nosotros">Nosotros</ion-item>
         <ion-item href="/noticias">Noticias</ion-item>
-        <ion-item href="/panaderia">Panaderia</ion-item>
-        <ion-item href="/pasteleria">Pasteleria</ion-item>
+        <ion-item href="/panaderia">Panadería</ion-item>
+        <ion-item href="/pasteleria">Pastelería</ion-item>
         <ion-item href="/blog">Blog</ion-item>
         <ion-item href="/login" *ngIf="isLoggedIn == false">Iniciar Sesión</ion-item>
         <ion-item href="/" *ngIf="isLoggedIn == true" (click)="logOut()">Cerrar Sesión</ion-item>
@@ -44,10 +44,10 @@
               Noticias
               </ion-button>
               <ion-button fill="clear" href="/panaderia">
-              Panaderia
+              Panadería
               </ion-button>
               <ion-button fill="clear" href="/pasteleria">
-              Pasteleria
+              Pastelería
               </ion-button>
               <ion-button fill="clear" href="/blog">
               Blog
@@ -62,7 +62,7 @@
               Cerrar sesión
               </ion-button>
               <ion-button fill="clear" *ngIf="isAdmin == true || isFinalUser == true"  href="/administracion">
-              Administracion
+              Administración
               </ion-button>
             </ion-col>
             <ion-col size="1" class="cart">
@@ -90,19 +90,18 @@
   <div class="products">
     <ion-row>
       <ion-col sizeLg="4" sizeXs="12"*ngFor=" let product of products; let i = index" >
-      <ion-card >
+      <ion-card class="carta">
         <p class="desc">{{product.category}}</p>
         <ion-img class="img-product" [src]="product.img"></ion-img>
-        <ion-item>
+        <ion-item class="carta-item">
           <ion-label class="name">{{product.name}}</ion-label>
         </ion-item>
-        <p class="desc">{{product.description}}</p>
-        <p class="price">${{product.price}}</p>
+        <p class="price">Precio: ${{product.price}}</p>
         <p class="desc">stock {{product.stock}}</p>
-        <ion-button (click)="deleteProduct(product)" expand="block" fill="clear" shape="round">
+        <ion-button (click)="deleteProduct(product)" expand="block" shape="round">
           borrar
         </ion-button>
-        <ion-button (click)="editProduct(product)" expand="block" fill="clear" shape="round">
+        <ion-button (click)="editProduct(product)" expand="block"  shape="round">
           editar
         </ion-button>
       </ion-card>

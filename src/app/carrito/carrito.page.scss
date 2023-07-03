@@ -1,5 +1,14 @@
+@font-face {
+  font-family: RobotoLight;
+  src: url("/assets/fonts/Roboto-Light.ttf"); //change url accordingly
+  }
+
+*{
+  font-family: 'RobotoLight', 'sans-serif';
+}
+
 .header{
-    background-color: black;
+    background-color: white;
     outline: white;
   }
 
@@ -25,6 +34,7 @@
 
   .carta {
     width: 100%; /* Establece la altura al 100% del viewport */
+    --background: #ffac75;
   }
 
   ion-row,
@@ -38,6 +48,11 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    color: black;
+  }
+
+  ion-card-title, ion-card-subtitle{
+    color: black;
   }
 
   .centrar{
@@ -45,4 +60,15 @@
     align-content: center;
     text-align: center;
     font-size: 24px;
+    color: black;
+  }
+
+  ion-content{
+    --background: #ffc3a0;
+  }
+
+  ion-title{
+    color: black;
+    font-size: 30px;
+    text-align: center;
   }

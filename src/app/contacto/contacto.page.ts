@@ -33,10 +33,10 @@ export class ContactoPage implements OnInit {
   ngOnInit() {
     this.getCurrentUser();
   }
-  
+
   formContact = new FormGroup({
     name: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+'), Validators.minLength(2)]),
-    email: new FormControl('', [Validators.required,Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'), Validators.minLength(10)]),
+    email: new FormControl('', [Validators.required,Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$'), Validators.minLength(10)]),
     phone: new FormControl('', [Validators.required, Validators.minLength(8)]),
     lastName: new FormControl('', [Validators.required,Validators.pattern('[a-zA-Z][a-zA-Z ]+')]),
     message: new FormControl('', [Validators.required, Validators.minLength(8)]),
@@ -72,7 +72,7 @@ export class ContactoPage implements OnInit {
   }
 
 
- 
+
 
 
   getCurrentUser(){
@@ -92,7 +92,7 @@ export class ContactoPage implements OnInit {
     // User is signed out
     // ...
   }
-    
+
 });
   }
 
@@ -106,24 +106,24 @@ const db = getFirestore();
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         console.log('ID:', doc.id); // ID del documento
-        console.log('Data:', doc.data()); // Todos los datos del documento  
+        console.log('Data:', doc.data()); // Todos los datos del documento
         this.email = doc.data()['email'];
         this.nombre = doc.data()['name'];
         this.apellido = doc.data()['lastName'];
         if (doc.data()['role']['admin'] === true) {
           this.isAdmin = true;
         }
-    
+
         else if (doc.data()['role']['final'] == true){
           this.isFinalUser = true;
         }
-    
+
         else{
           this.isAdmin = false;
           this.isFinalUser = false;
         }
-        
-        
+
+
     });
     })
     .catch((error) => {
@@ -134,7 +134,7 @@ const db = getFirestore();
   logOut(){
     this._userService.logOut()
     .then(() => {
-      this._router.navigate(['reload']);
+      this._router.navigate(['/']);
     })
     .catch(error => console.log(error));
   }

@@ -23,7 +23,7 @@ export class PasteleriaPage implements OnInit {
   product$!: Observable<Product[]>;
 
   products: Product[] = [];
- 
+
 
   _router = inject(Router);
   _userService = inject(UsersService);
@@ -34,7 +34,7 @@ export class PasteleriaPage implements OnInit {
   _cartService = inject(CartService)
   compra: any = [];
 
-  constructor() { 
+  constructor() {
     this.loadProducto();
     this.getCurrentUser();
     console.log(sessionStorage.getItem("Producto"));
@@ -52,7 +52,7 @@ export class PasteleriaPage implements OnInit {
     )
   }
 
-  
+
 
   getCurrentUser(){
     const auth = getAuth();
@@ -71,7 +71,7 @@ export class PasteleriaPage implements OnInit {
     // User is signed out
     // ...
   }
-    
+
 });
   }
 
@@ -85,21 +85,21 @@ const db = getFirestore();
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         console.log('ID:', doc.id); // ID del documento
-        console.log('Data:', doc.data()); // Todos los datos del documento  
+        console.log('Data:', doc.data()); // Todos los datos del documento
         if (doc.data()['role']['admin'] === true) {
           this.isAdmin = true;
         }
-    
+
         else if (doc.data()['role']['final'] == true){
           this.isFinalUser = true;
         }
-    
+
         else{
           this.isAdmin = false;
           this.isFinalUser = false;
         }
-        
-        
+
+
     });
     })
     .catch((error) => {
@@ -114,7 +114,7 @@ getProduct(product: Product) {
 logOut(){
   this._userService.logOut()
   .then(() => {
-    this._router.navigate(['reload']);
+    this._router.navigate(['/']);
   })
   .catch(error => console.log(error));
   }

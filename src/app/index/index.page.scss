@@ -1,5 +1,14 @@
+@font-face {
+  font-family: RobotoLight;
+  src: url("/assets/fonts/Roboto-Light.ttf"); //change url accordingly
+  }
+
+*{
+  font-family: 'RobotoLight', 'sans-serif';
+}
+
 .header{
-  background-color: black;
+  background-color: #ffffff;
   outline: white;
 }
 
@@ -21,14 +30,11 @@
     display: none;
   }
 
-}
 
-.fondo{
-  background-color: #e08e00;
 }
 
 header{
-  background-color: #e08e00;
+  background-color: #ffac75  ;
   text-align: center;
   padding-top: 50px;
   padding-bottom: 50px;
@@ -37,6 +43,7 @@ header{
 header h1{
   color: white;
   font-size: 50px;
+  color: black;
 }
 
 header img{
@@ -48,12 +55,13 @@ header img{
 .titulo{
   text-align: center;
   font-size: 32px;
+  color: black;
 }
 
 
 .card {
   position: relative;
-  width: 200px;
+  width: 90%;
   height: 200px;
 }
 
@@ -68,9 +76,10 @@ header img{
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: black;
+  color: rgb(255, 125, 4);
   font-size: 22px;
 }
+
 
 .column-center {
   display: grid;
@@ -89,6 +98,7 @@ header img{
 
 h2 {
   margin-top: 20px;
+  color: black;
 }
 
 .img-product{
@@ -101,6 +111,7 @@ h2 {
 .name{
   text-align: center;
   font-size: 30px;
+  color: black;
 }
 
 .price{
@@ -116,9 +127,27 @@ h2 {
   margin: 10px 20px 0px 0px;
   text-align: center;
   font-size: 20px;
+  color: black;
 }
 
+.card-product, .card-item{
+  --background: #ffac75;
+  color: black;
+}
 
 .boton{
   text-align: center;
+  color: black;
+}
+
+.form-control{
+  text-align: center;
+}
+
+ion-content{
+  --background: #ffc3a0;
+}
+
+ion-input{
+  background: white;
 }

@@ -1,26 +1,51 @@
+@font-face {
+  font-family: RobotoLight;
+  src: url("/assets/fonts/Roboto-Light.ttf"); //change url accordingly
+  }
+
+*{
+  font-family: 'RobotoLight', 'sans-serif';
+}
+
 .header{
-    background-color: black;
+    background-color: white;
     outline: white;
   }
-  
+
   @media(min-width: 1024px){
     .menu-button{
       display: none;
     }
-  
+
     .menu-main-content{
       display: none;
     }
-  
-   
-    
+
+
+
   }
-  
+
   @media(max-width:1023px){
     .header{
       display: none;
     }
-  
-  }
-  
 
+  }
+
+  .centrar{
+    text-align: center;
+    align-items: center;
+    color: black;
+  }
+
+
+  ion-content{
+    --background: #ffc3a0;
+  }
+
+
+
+  ion-item{
+    --background: white;
+    color: black;
+  }

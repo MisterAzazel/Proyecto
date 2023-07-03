@@ -1,5 +1,14 @@
+@font-face {
+  font-family: RobotoLight;
+  src: url("/assets/fonts/Roboto-Light.ttf"); //change url accordingly
+  }
+
+*{
+  font-family: 'RobotoLight', 'sans-serif';
+}
+
 .header{
-    background-color: black;
+    background-color: white;
     outline: white;
   }
 
@@ -44,5 +53,14 @@
     margin: 10px 20px 0px 0px;
     text-align: center;
     font-size: 20px;
-    color: #ffffff;
+    color: black;
   }
+
+  ion-content{
+    --background: #ffc3a0;
+  }
+
+.carta, ion-item{
+  --background: #ffac75;
+  color: black;
+}

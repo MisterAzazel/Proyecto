@@ -1,5 +1,14 @@
+@font-face {
+  font-family: RobotoLight;
+  src: url("/assets/fonts/Roboto-Light.ttf"); //change url accordingly
+  }
+
+*{
+  font-family: 'RobotoLight', 'sans-serif';
+}
+
 .header{
-    background-color: black;
+    background-color: white;
     outline: white;
   }
 
@@ -25,4 +34,24 @@
 
   .centrar{
     text-align: center;
+  }
+
+  ion-content{
+    --background: #ffc3a0;
+  }
+
+  ion-title{
+    text-align: center;
+    color: black;
+    font-size: 24px;
+  }
+
+  ion-item, ion-select{
+    --background: white;
+    color: black;
+  }
+
+  .boton{
+    text-align: center;
+    align-items: center;
   }
