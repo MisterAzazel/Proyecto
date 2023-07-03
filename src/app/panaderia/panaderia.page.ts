@@ -34,10 +34,9 @@ export class PanaderiaPage implements OnInit {
   isLoggedIn = false;
   isFinalUser = false;
   compra: any = [];
-  filtro: string = 'panaderia';
 
   constructor() {
-    this.loadProducto(this.filtro);
+    this.loadProducto();
     this.getCurrentUser();
   }
 
@@ -47,8 +46,8 @@ export class PanaderiaPage implements OnInit {
     //this.product$ = this._productService.getProduct();
   }
 
-  loadProducto(filtro: string = 'panaderia'){
-    this._productService.getProduct(filtro).subscribe( res =>{
+  loadProducto(){
+    this._productService.getProduct('Panadería').subscribe( res =>{
       this.products = res;
     }
 

@@ -45,7 +45,7 @@ export class PasteleriaPage implements OnInit {
   }
 
   loadProducto(){
-    this._productService.getProduct('pasteleria').subscribe( res =>{
+    this._productService.getProduct('Pastelería').subscribe( res =>{
       this.products = res;
     }
 

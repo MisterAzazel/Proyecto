@@ -112,7 +112,7 @@
           <td>{{ contacto.phone }}</td>
           <td>{{ contacto.message }}</td>
           <td *ngIf="contacto.state == false">Pendiente</td>
-          <td *ngIf="contacto.state == true">Completado</td>
+          <td *ngIf="contacto.state == true">Respondido</td>
           <td><ion-button (click)="getRegistroContacto(contacto)">Entrar</ion-button></td>
         </tr>
       </tbody>
