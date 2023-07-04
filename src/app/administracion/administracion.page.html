@@ -105,6 +105,15 @@
           </div>
         </ion-card>
       </ion-col>
+      <ion-col sizeLg="6" sizeXs="12" *ngIf="isFinalUser == true" >
+        <ion-card class="carta">
+          <p class="title">Compras</p>
+          <ion-img class="img-product" src="assets/img/carrito.jpg"></ion-img>
+          <div class="entrar">
+            <ion-button href="/boleta">Administrar compras</ion-button>
+          </div>
+        </ion-card>
+      </ion-col>
     </ion-row>
   </div>
 
