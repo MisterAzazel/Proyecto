@@ -114,10 +114,12 @@ export class BoletaPage implements OnInit {
     axios.put(url, datosDeCancelacion, { headers: headers })
     .then(response => {
       console.log('Reembolso', response.data)
+      alert('Reembolso completado')
       this.reembolsarCompra(orden_compra);
       // Manejar la respuesta según tus necesidades
     })
     .catch(error => {
+      alert('No se pudo reembolsar su compra, puede que haya pasado su tiempo limite (7 días)')
       console.error('Error:', error);
       console.log('Error:', error.response?.data);
       // Manejar el error según tus necesidades
